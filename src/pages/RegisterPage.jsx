@@ -1,79 +1,126 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Container, TextField, Button, Box, Typography, Alert } from '@mui/material'
+import { Container, TextField, Button, Typography, Box, Alert } from '@mui/material'
 import axios from 'axios'
-import { loginAPI } from '~/API'
+import { useNavigate } from 'react-router-dom'
+import { registerAPI } from '~/API'
 
-function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+const RegisterPage = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    name: '',
+    age: '',
+    email: '',
+    password: '',
+    sdt: '',
+    address: '',
+  })
+
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
-  const handleLogin = async () => {
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
-      const response = await axios.post(loginAPI, {
-        email,
-        password,
-      })
-      const { accessToken, refreshToken, user } = response.data
-
-      // Lưu dữ liệu vào localStorage
-      localStorage.setItem('accessToken', accessToken)
-      localStorage.setItem('refreshToken', refreshToken)
-      localStorage.setItem('user', JSON.stringify(user))
-
-      setSuccess('Login successful!')
-      setError('')
-
-      // Chuyển hướng tới trang chủ
-      navigate('/')
-    } catch (err) {
-      setError('Login failed. Please check your email and password.')
-      setSuccess('')
+      const response = await axios.post(registerAPI, formData)
+      if (response.status === 201) {
+        navigate('/login')
+      }
+    } catch (error) {
+      setError(error.response.data.error || 'Registration failed. Please try again.')
     }
   }
 
   return (
-    <Container maxWidth="xs">
-      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 8 }}>
         <Typography variant="h4" gutterBottom>
-          Login Page
+          Register Page
         </Typography>
-        <TextField
-          label="Email"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
         {error && <Alert severity="error">{error}</Alert>}
-        {success && <Alert severity="success">{success}</Alert>}
-        <Button variant="contained" color="primary" onClick={handleLogin} fullWidth>
-          Login
-        </Button>
-        <Box mt={2}>
-          <Typography variant="body1">
-            Don't have an account?{' '}
-            <Link to="/register" style={{ textDecoration: 'none', color: 'blue', cursor: 'pointer' }}>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Age"
+            name="age"
+            type="number"
+            value={formData.age}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Phone Number"
+            name="sdt"
+            value={formData.sdt}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Address"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <Box sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
               Register
-            </Link>
-          </Typography>
-        </Box>
+            </Button>
+          </Box>
+        </form>
       </Box>
     </Container>
   )
 }
 
-export default LoginPage
+export default RegisterPage
