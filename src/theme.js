@@ -1,7 +1,9 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 const theme = extendTheme({
-  other: {},
+  other: {
+    headerBarHeight: '80px',
+  },
   colorSchemes: {
     light: {
       palette: {
@@ -23,7 +25,7 @@ const theme = extendTheme({
       palette: {
         backgroundColor: {
           primary: '#30a32a',
-          secondary: '#ffffff',
+          secondary: '#121212',
         },
         textColor: {
           primary: '#ffffff',
