@@ -1,37 +1,37 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 const theme = extendTheme({
-  KRDev: {
-    headerBarHeight: '64px',
-  },
+  other: {},
   colorSchemes: {
     light: {
       palette: {
-        background: {
-          default: '#ffffff',
-          other: '#f5f8fc',
+        backgroundColor: {
+          primary: '#355933',
+          secondary: '#ffffff',
         },
-        text: {
+        textColor: {
           primary: '#000000',
-          secondary: '#525866',
+          secondary: '#355933',
         },
-        hover: {
-          primary: '#dcdee0',
+        hoverColor: {
+          primary: '#ffffff',
+          secondary: '#ffffff',
         },
       },
     },
     dark: {
       palette: {
-        background: {
-          default: '#131314',
-          other: '#1e1f20',
+        backgroundColor: {
+          primary: '#30a32a',
+          secondary: '#ffffff',
         },
-        text: {
+        textColor: {
           primary: '#ffffff',
-          secondary: '#a8b3cf',
+          secondary: '#355933',
         },
-        hover: {
-          primary: '#2d323b',
+        hoverColor: {
+          primary: '#000000',
+          secondary: '#ffffff',
         },
       },
     },
