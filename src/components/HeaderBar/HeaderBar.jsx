@@ -101,13 +101,13 @@ const HeaderBar = () => {
         }}
       >
         <Box sx={{ display: 'flex', flexGrow: 1 }}>
-          <Typography variant="h6" noWrap component="div" sx={{ marginRight: 2 }}>
+          <Typography variant="h6" noWrap component="div" sx={{ marginRight: 2 }} onClick={() => navigate('/')}>
             Home
           </Typography>
-          <Typography variant="h6" noWrap component="div" sx={{ marginRight: 2 }}>
+          <Typography variant="h6" noWrap component="div" sx={{ marginRight: 2 }} onClick={() => navigate('/post')}>
             Post
           </Typography>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" onClick={() => navigate('/message')}>
             Message
           </Typography>
         </Box>
