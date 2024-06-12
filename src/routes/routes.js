@@ -4,6 +4,7 @@ import RegisterPage from '~/pages/RegisterPage'
 import ProfilePage from '~/pages/ProfilePage'
 import SettingPage from '~/pages/SettingPage'
 import MessagePage from '~/pages/MessagePage'
+import ProductPage from '~/pages/ProductPage'
 
 const publicRoutes = [
   { path: '/', component: HomePage },
@@ -12,6 +13,7 @@ const publicRoutes = [
   { path: '/user/:username', component: ProfilePage },
   { path: '/setting', component: SettingPage },
   { path: '/message', component: MessagePage },
+  { path: '/my-product', component: ProductPage },
 ]
 
 const privateRoutes = []

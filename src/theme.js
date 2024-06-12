@@ -2,7 +2,8 @@ import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 const theme = extendTheme({
   other: {
-    headerBarHeight: '80px',
+    headerBarHeight: '61px',
+    marginLeftWidth: '196px',
   },
   colorSchemes: {
     light: {

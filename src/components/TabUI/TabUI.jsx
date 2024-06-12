@@ -52,7 +52,7 @@ const TabUI = () => {
   }
 
   return (
-    <Box sx={{ width: '100%', backgroundColor: 'red' }}>
+    <Box sx={{ width: '100%', backgroundColor: '#fff' }}>
       <Box
         sx={{
           display: 'flex',

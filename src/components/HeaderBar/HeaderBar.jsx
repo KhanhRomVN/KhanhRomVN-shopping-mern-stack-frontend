@@ -1,50 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
-import Box from '@mui/material/Box'
-import { alpha, styled } from '@mui/material/styles'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import Button from '@mui/material/Button'
-import SearchIcon from '@mui/icons-material/Search'
+import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
-import ModeSelect from '../ModeSelect'
-import MenuItem from '@mui/material/MenuItem'
-import Menu from '@mui/material/Menu'
-import { useNavigate } from 'react-router-dom' // Import useNavigate
+import Divider from '@mui/material/Divider'
+import { Mail as MailIcon, Notifications as NotificationsIcon, Search as SearchIcon } from '@mui/icons-material'
+import { styled, alpha } from '@mui/material/styles'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '20px',
+  backgroundColor: alpha(theme.palette.common.black, 0.1),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.black, 0.15),
   },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}))
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
+  marginLeft: theme.spacing(1),
+  width: '440px', // Điều chỉnh độ rộng ở đây
+  height: '38px', // Điều chỉnh chiều cao ở đây
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
+  padding: '0 10px',
 }))
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    padding: theme.spacing(1),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -53,94 +38,55 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-const checkUserLoggedIn = () => {
-  const user = localStorage.getItem('user')
-  return !!user // returns true if user is not null, false otherwise
-}
-
 const HeaderBar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
-  const navigate = useNavigate() // Use useNavigate hook
-
-  useEffect(() => {
-    setIsLoggedIn(checkUserLoggedIn())
-  }, [])
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-  }
-
-  const handleProfileClick = () => {
-    const user = JSON.parse(localStorage.getItem('user'))
-    const username = user.username
-    navigate(`/user/${username}`) // Use navigate function
-  }
-
-  const handleSettingClick = () => {
-    navigate('/setting') // Use navigate function
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    navigate('/login') // Use navigate function
-  }
+  const user = JSON.parse(localStorage.getItem('user'))
 
   return (
-    <AppBar position="fixed">
-      <Toolbar
+    <>
+      <AppBar
+        position="fixed"
         sx={{
-          backgroundColor: (theme) => theme.palette.backgroundColor.secondary,
-          color: (theme) => theme.palette.textColor.primary,
+          height: '55px',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+          color: 'black',
+          boxShadow: 'none', // Loại bỏ box shadow
         }}
       >
-        <Box sx={{ display: 'flex', flexGrow: 1 }}>
-          <Typography variant="h6" noWrap component="div" sx={{ marginRight: 2 }} onClick={() => navigate('/')}>
-            Home
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6" noWrap component="div">
+            logo
           </Typography>
-          <Typography variant="h6" noWrap component="div" sx={{ marginRight: 2 }} onClick={() => navigate('/post')}>
-            Post
-          </Typography>
-          <Typography variant="h6" noWrap component="div" onClick={() => navigate('/message')}>
-            Message
-          </Typography>
-        </Box>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-        </Search>
-        <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 2 }}>
-          <IconButton color="inherit">
-            <ShoppingCartIcon />
-          </IconButton>
-          {isLoggedIn ? (
-            <>
-              <IconButton onClick={handleMenuOpen}>
-                <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
-              </IconButton>
-              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-                <MenuItem onClick={handleSettingClick}>Setting</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button color="inherit" sx={{ fontSize: '14px' }}>
-              Login
-            </Button>
-          )}
-          <ModeSelect />
-        </Box>
-      </Toolbar>
-    </AppBar>
+          <Search>
+            <SearchIcon sx={{ color: 'gray' }} />
+            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+          </Search>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {user ? (
+              <>
+                <IconButton color="inherit">
+                  <MailIcon />
+                </IconButton>
+                <IconButton color="inherit">
+                  <NotificationsIcon />
+                </IconButton>
+                <Avatar alt="User Avatar" src={user.avatarUrl} />
+              </>
+            ) : (
+              <Button
+                color="inherit"
+                onClick={() => {
+                  // Logic for Login
+                }}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+        <Divider />
+      </AppBar>
+    </>
   )
 }
 

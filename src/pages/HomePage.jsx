@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import HeaderBar from '~/components/HeaderBar/HeaderBar'
 import TabUI from '~/components/TabUI/TabUI'
+import SideBar from '~/components/SideBar/SideBar'
 
 function HomePage() {
   const [username, setUsername] = useState(null)
@@ -24,16 +26,26 @@ function HomePage() {
   }, [navigate])
 
   return (
-    <Container
+    <Box
       sx={{
-        marginTop: (theme) => theme.other.headerBarHeight,
-        textAlign: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#f3f3f3',
+        boxSizing: 'border-box',
       }}
     >
       <HeaderBar />
-      <TabUI />
-    </Container>
+      <SideBar />
+      <Box
+        sx={{
+          width: 'auto',
+          marginTop: (theme) => theme.other.headerBarHeight,
+          marginLeft: (theme) => theme.other.marginLeftWidth,
+          boxSizing: 'border-box',
+          padding: '8px',
+        }}
+      >
+        <TabUI />
+      </Box>
+    </Box>
   )
 }
 
