@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -8,6 +9,8 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import { Mail as MailIcon, Notifications as NotificationsIcon, Search as SearchIcon } from '@mui/icons-material'
 import { styled, alpha } from '@mui/material/styles'
 
@@ -19,8 +22,8 @@ const Search = styled('div')(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.black, 0.15),
   },
   marginLeft: theme.spacing(1),
-  width: '440px', // Điều chỉnh độ rộng ở đây
-  height: '38px', // Điều chỉnh chiều cao ở đây
+  width: '440px',
+  height: '38px',
   display: 'flex',
   alignItems: 'center',
   padding: '0 10px',
@@ -39,7 +42,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 const HeaderBar = () => {
+  const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem('user'))
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    navigate('/login')
+  }
 
   return (
     <>
@@ -50,7 +71,7 @@ const HeaderBar = () => {
           justifyContent: 'center',
           backgroundColor: 'white',
           color: 'black',
-          boxShadow: 'none', // Loại bỏ box shadow
+          boxShadow: 'none',
         }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -70,7 +91,22 @@ const HeaderBar = () => {
                 <IconButton color="inherit">
                   <NotificationsIcon />
                 </IconButton>
-                <Avatar alt="User Avatar" src={user.avatarUrl} />
+                <IconButton onClick={handleMenu}>
+                  <Avatar alt="User Avatar" src={user.avatarUrl} />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      transform: 'translateY(40px)',
+                    },
+                  }}
+                >
+                  <MenuItem onClick={() => navigate('/settings')}>Settings</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
               </>
             ) : (
               <Button
