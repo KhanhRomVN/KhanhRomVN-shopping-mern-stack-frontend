@@ -1,99 +1,63 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
+import axios from 'axios'
+import ProductLayout from '../ProductLayout/ProductLayout'
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  )
+// Function to transform product type names
+const transformTypeName = (name) => {
+  return name.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')
 }
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+const transformTypeNameArray = (product_types) => {
+  const arrayAfterTransform = []
+
+  for (let i = 0; i < product_types.length; i++) {
+    const transformedName = transformTypeName(product_types[i])
+    arrayAfterTransform.push(transformedName)
   }
+
+  return arrayAfterTransform
 }
 
-const CircularButton = styled(Button)(({ theme }) => ({
-  padding: '4px 20px',
-  borderRadius: '20px',
-  marginRight: '15px',
-  color: theme.palette.textColor.primary,
-  border: `1px solid ${theme.palette.textColor.primary}`,
-  '&:hover': {
-    border: `1px solid ${theme.palette.textColor.secondary}`,
-  },
-}))
-
-const TabUI = () => {
-  const [value, setValue] = useState(0)
+const TabUI = ({ product_types }) => {
+  const [selectedTab, setSelectedTab] = useState(0)
+  const [data, setData] = useState(null)
+  const arrayAfterTransform = transformTypeNameArray(product_types)
 
   const handleChange = (event, newValue) => {
-    setValue(newValue)
+    setSelectedTab(newValue)
   }
 
   return (
-    <Box sx={{ width: '100%', backgroundColor: '#fff' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '15px',
-        }}
-      >
-        <CircularButton onClick={(event) => handleChange(event, 0)} {...a11yProps(0)}>
-          page 1
-        </CircularButton>
-        <CircularButton onClick={(event) => handleChange(event, 1)} {...a11yProps(1)}>
-          page 2
-        </CircularButton>
-        <CircularButton onClick={(event) => handleChange(event, 2)} {...a11yProps(2)}>
-          page 3
-        </CircularButton>
-        <CircularButton onClick={(event) => handleChange(event, 3)} {...a11yProps(3)}>
-          page 4
-        </CircularButton>
-        <CircularButton onClick={(event) => handleChange(event, 4)} {...a11yProps(4)}>
-          page 5
-        </CircularButton>
-        <CircularButton onClick={(event) => handleChange(event, 5)} {...a11yProps(5)}>
-          Icon
-        </CircularButton>
+    <Box
+      sx={{
+        width: '100%',
+        backgroundColor: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        paddingTop: '16px',
+      }}
+    >
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+        {product_types.map((type, index) => (
+          <Button
+            key={index}
+            variant={selectedTab === index ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={() => setSelectedTab(index)}
+          >
+            {type}
+          </Button>
+        ))}
       </Box>
-      <TabPanel value={value} index={0}>
-        Item One Content
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two Content
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three Content
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four Content
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five Content
-      </TabPanel>
+      <Box sx={{ p: 3, width: '100%' }}>
+        <ProductLayout type={arrayAfterTransform[selectedTab]} />
+      </Box>
     </Box>
   )
 }

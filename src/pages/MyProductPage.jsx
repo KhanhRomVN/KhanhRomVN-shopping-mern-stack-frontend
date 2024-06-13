@@ -1,5 +1,12 @@
-import React, { useEffect, useReducer } from 'react'
-import { Box, Button, Typography, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
+import { useEffect, useReducer } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
 import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
@@ -230,11 +237,11 @@ const MyProductPage = () => {
                   onChange={handleInputChange}
                   label="Category"
                 >
-                  <MenuItem value="Fashion">Fashion</MenuItem>
-                  <MenuItem value="Electronic">Electronic</MenuItem>
-                  <MenuItem value="Home Appliances">Home Appliances</MenuItem>
-                  <MenuItem value="Mother & Baby">Mother & Baby</MenuItem>
-                  <MenuItem value="Health & Beauty">Health & Beauty</MenuItem>
+                  <MenuItem value="fashion">Fashion</MenuItem>
+                  <MenuItem value="electronic">Electronic</MenuItem>
+                  <MenuItem value="home_appliances">Home Appliances</MenuItem>
+                  <MenuItem value="mother_and_baby">Mother & Baby</MenuItem>
+                  <MenuItem value="health_and_beauty">Health & Beauty</MenuItem>
                 </Select>
               </FormControl>
               <input type="file" onChange={handleImageChange} />

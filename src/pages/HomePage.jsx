@@ -43,7 +43,7 @@ function HomePage() {
           padding: '8px',
         }}
       >
-        <TabUI />
+        <TabUI product_types={['Fashion', 'Electronics', 'Home Appliances', 'Mother & Baby']} />
       </Box>
     </Box>
   )
