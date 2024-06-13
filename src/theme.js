@@ -4,17 +4,18 @@ const theme = extendTheme({
   other: {
     headerBarHeight: '61px',
     marginLeftWidth: '196px',
+    primaryColor: '#e15a15',
   },
   colorSchemes: {
     light: {
       palette: {
         backgroundColor: {
-          primary: '#355933',
-          secondary: '#ffffff',
+          primary: '#ffffff',
+          secondary: '#e8e8e8',
         },
         textColor: {
           primary: '#000000',
-          secondary: '#355933',
+          secondary: '#929297',
         },
         hoverColor: {
           primary: '#ffffff',
@@ -25,16 +26,16 @@ const theme = extendTheme({
     dark: {
       palette: {
         backgroundColor: {
-          primary: '#30a32a',
-          secondary: '#121212',
+          primary: '#09090b',
+          secondary: '#18171c',
         },
         textColor: {
           primary: '#ffffff',
-          secondary: '#355933',
+          secondary: '#5c5c5e',
         },
         hoverColor: {
-          primary: '#000000',
-          secondary: '#ffffff',
+          primary: '#09090b',
+          secondary: '#18171c',
         },
       },
     },

@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
-import { alpha, styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
 import SearchIcon from '@mui/icons-material/Search'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { AddBoxRounded } from '@mui/icons-material'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import { useNavigate } from 'react-router-dom' // Import useNavigate hook
+
+const logo = '../../../public/images/logo.png'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -41,16 +44,28 @@ const TransparentAppBar = styled(AppBar)(({ theme }) => ({
 const HeaderBar = () => {
   return (
     <TransparentAppBar position="fixed">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', boxSizing: 'border-box', padding: '0 20px' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          textAlign: 'center',
+          boxSizing: 'border-box',
+          height: '60px',
+          padding: '0 20px',
+        }}
+      >
         <Box
-          sx={{ display: 'flex', alignItems: 'center', color: (theme) => theme.palette.textColor.primary, gap: '10px' }}
+          sx={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            color: (theme) => theme.palette.textColor.primary,
+            gap: '10px',
+          }}
         >
-          <Typography variant="h7" component="div" sx={{ flexGrow: 1 }}>
-            Logo
-          </Typography>
-          <Typography variant="h7" component="div">
-            Home
-          </Typography>
+          <Box sx={{ height: '48%' }}>
+            <img src={logo} alt="logo" style={{ objectFit: 'cover', height: '100%' }} />
+          </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', color: (theme) => theme.palette.textColor.primary }}>
           <IconButton color="inherit">
@@ -59,12 +74,50 @@ const HeaderBar = () => {
           <IconButton color="inherit">
             <ShoppingCartIcon />
           </IconButton>
-          <IconButton color="inherit">
-            <Avatar />
-          </IconButton>
+          <AvatarDropdown />
         </Box>
       </Box>
     </TransparentAppBar>
+  )
+}
+
+const AvatarDropdown = () => {
+  const [openDropdown, setOpenDropdown] = useState(null)
+  const navigate = useNavigate() // Hook useNavigate để điều hướng
+
+  const handleAvatarClick = (event) => {
+    setOpenDropdown(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setOpenDropdown(null)
+  }
+
+  const handleSettingClick = () => {
+    navigate('/setting') // Điều hướng đến '/setting'
+    handleClose()
+  }
+
+  const handleLogoutClick = () => {
+    // Clear user information from localStorage
+    localStorage.removeItem('user')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    // Redirect or handle logout action
+    console.log('User logged out')
+    handleClose()
+  }
+
+  return (
+    <>
+      <IconButton color="inherit" onClick={handleAvatarClick}>
+        <Avatar />
+      </IconButton>
+      <Menu anchorEl={openDropdown} open={Boolean(openDropdown)} onClose={handleClose} onClick={handleClose}>
+        <MenuItem onClick={handleSettingClick}>Settings</MenuItem>
+        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+      </Menu>
+    </>
   )
 }
 

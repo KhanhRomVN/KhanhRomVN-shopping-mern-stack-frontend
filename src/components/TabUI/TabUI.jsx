@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import Typography from '@mui/material/Typography'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import axios from 'axios'
 import ProductLayout from '../ProductLayout/ProductLayout'
 
 // Function to transform product type names
@@ -25,7 +21,6 @@ const transformTypeNameArray = (product_types) => {
 
 const TabUI = ({ product_types }) => {
   const [selectedTab, setSelectedTab] = useState(0)
-  const [data, setData] = useState(null)
   const arrayAfterTransform = transformTypeNameArray(product_types)
 
   const handleChange = (event, newValue) => {
@@ -48,8 +43,15 @@ const TabUI = ({ product_types }) => {
           <Button
             key={index}
             variant={selectedTab === index ? 'contained' : 'outlined'}
-            color="primary"
             onClick={() => setSelectedTab(index)}
+            sx={{
+              color: (theme) => theme.palette.backgroundColor.primary,
+              backgroundColor: (theme) => theme.other.primaryColor,
+              '&:hover': {
+                color: (theme) => theme.other.primaryColor,
+                backgroundColor: (theme) => theme.palette.backgroundColor.primary,
+              },
+            }}
           >
             {type}
           </Button>

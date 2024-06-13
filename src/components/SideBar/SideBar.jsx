@@ -68,14 +68,15 @@ const SideBar = () => {
                 sx={{
                   padding: '4px 84px 4px 16px',
                   '&:hover': {
-                    backgroundColor: '#f0f0f0', // Thay đổi màu nền khi hover
+                    backgroundColor: (theme) => theme.other.primaryColor,
+                    color: (theme) => theme.palette.hoverColor.primary,
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    minWidth: 'auto', // Remove the default minWidth to bring the icon closer
-                    marginRight: '8px', // Adjust the space between the icon and text
+                    minWidth: 'auto',
+                    marginRight: '8px',
                   }}
                 >
                   <Box

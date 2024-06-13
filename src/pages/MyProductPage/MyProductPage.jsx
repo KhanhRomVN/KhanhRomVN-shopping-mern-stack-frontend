@@ -15,38 +15,11 @@ import HeaderBar from '~/components/HeaderBar/HeaderBar'
 import SideBar from '~/components/SideBar/SideBar'
 import { imageDB } from '~/firebase/firebaseConfig'
 import { fetchProducts, addProduct, updateUserRole } from '~/API'
-
-const initialState = {
-  user: null,
-  showForm: false,
-  formData: {
-    name: '',
-    price: '',
-    discount: '',
-    category: '',
-    image: null,
-  },
-  products: [],
-}
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'SET_USER':
-      return { ...state, user: action.payload }
-    case 'TOGGLE_FORM':
-      return { ...state, showForm: !state.showForm }
-    case 'SET_FORM_DATA':
-      return { ...state, formData: { ...state.formData, ...action.payload } }
-    case 'SET_PRODUCTS':
-      return { ...state, products: action.payload }
-    default:
-      return state
-  }
-}
+import { initialState, reducer } from './reducer'
 
 const MyProductPage = () => {
   const navigate = useNavigate()
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [{ user, showForm, formData, products }, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
     const userData = localStorage.getItem('user')
@@ -65,17 +38,15 @@ const MyProductPage = () => {
         console.error(error.message)
       }
     }
-
     loadProducts()
   }, [])
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target
+  const handleInputChange = ({ target: { name, value } }) => {
     dispatch({ type: 'SET_FORM_DATA', payload: { [name]: value } })
   }
 
-  const handleImageChange = (event) => {
-    const imageFile = event.target.files[0]
+  const handleImageChange = ({ target: { files } }) => {
+    const imageFile = files[0]
     dispatch({ type: 'SET_FORM_DATA', payload: { image: imageFile } })
   }
 
@@ -84,23 +55,24 @@ const MyProductPage = () => {
     try {
       let imageURL = ''
 
-      if (state.formData.image) {
+      if (formData.image) {
         const imageRef = ref(imageDB, `images/${v4()}`)
-        const snapshot = await uploadBytes(imageRef, state.formData.image)
+        const snapshot = await uploadBytes(imageRef, formData.image)
         imageURL = await getDownloadURL(snapshot.ref)
       }
 
       const productData = {
-        name: state.formData.name,
-        type: state.formData.category,
-        price: parseInt(state.formData.price),
-        discount: parseInt(state.formData.discount),
+        name: formData.name,
+        type: formData.category,
+        price: parseInt(formData.price),
+        discount: parseInt(formData.discount),
         image: imageURL,
       }
 
       const response = await addProduct(accessToken, productData)
       if (response.status === 201) {
-        window.location.reload()
+        dispatch({ type: 'SET_PRODUCTS', payload: [...products, productData] })
+        dispatch({ type: 'TOGGLE_FORM' })
       } else {
         console.error('Failed to add product:', response.statusText)
       }
@@ -114,9 +86,9 @@ const MyProductPage = () => {
     try {
       const response = await updateUserRole(accessToken)
       if (response.status === 200) {
-        const updatedUser = { ...state.user, role: 'seller' }
+        const updatedUser = { ...user, role: 'seller' }
         localStorage.setItem('user', JSON.stringify(updatedUser))
-        window.location.reload()
+        dispatch({ type: 'SET_USER', payload: updatedUser })
       } else {
         console.error('Failed to update user role:', response.statusText)
       }
@@ -125,9 +97,8 @@ const MyProductPage = () => {
     }
   }
 
-  const handleRowClick = (params) => {
-    const id = params.row._id // Giả sử _id là trường chứa ID của sản phẩm
-    navigate(`/product/${id}`)
+  const handleRowClick = ({ row: { _id } }) => {
+    navigate(`/product/${_id}`)
   }
 
   const columns = [
@@ -140,19 +111,14 @@ const MyProductPage = () => {
     { field: 'updatedAt', headerName: 'Updated At', width: 200 },
   ]
 
-  const rows = state.products.map((product, index) => ({
+  const rows = products.map((product, index) => ({
     id: index + 1,
     stt: index + 1,
     ...product,
   }))
 
   return (
-    <Box
-      sx={{
-        backgroundColor: '#f3f3f3',
-        boxSizing: 'border-box',
-      }}
-    >
+    <Box sx={{ backgroundColor: '#f3f3f3', boxSizing: 'border-box' }}>
       <HeaderBar />
       <SideBar />
       <Box
@@ -179,7 +145,7 @@ const MyProductPage = () => {
           }}
         >
           <Typography variant="h6">My Products</Typography>
-          {state.user && state.user.role === 'seller' ? (
+          {user?.role === 'seller' ? (
             <Button variant="contained" onClick={() => dispatch({ type: 'TOGGLE_FORM' })}>
               Add new
             </Button>
@@ -189,7 +155,7 @@ const MyProductPage = () => {
             </Button>
           )}
         </Box>
-        {state.showForm && (
+        {showForm && (
           <Box
             sx={{
               position: 'fixed',
@@ -209,21 +175,21 @@ const MyProductPage = () => {
               <TextField
                 label="Name"
                 name="name"
-                value={state.formData.name}
+                value={formData.name}
                 onChange={handleInputChange}
                 variant="outlined"
               />
               <TextField
                 label="Price"
                 name="price"
-                value={state.formData.price}
+                value={formData.price}
                 onChange={handleInputChange}
                 variant="outlined"
               />
               <TextField
                 label="Discount"
                 name="discount"
-                value={state.formData.discount}
+                value={formData.discount}
                 onChange={handleInputChange}
                 variant="outlined"
               />
@@ -233,7 +199,7 @@ const MyProductPage = () => {
                   labelId="category-label"
                   id="category"
                   name="category"
-                  value={state.formData.category}
+                  value={formData.category}
                   onChange={handleInputChange}
                   label="Category"
                 >
@@ -255,12 +221,7 @@ const MyProductPage = () => {
           </Box>
         )}
         <Box sx={{ height: '478px', width: '100%', backgroundColor: 'white' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            onRowClick={handleRowClick} // Thêm sự kiện onRowClick và truyền hàm xử lý sự kiện vào đó
-          />
+          <DataGrid rows={rows} columns={columns} pageSize={5} onRowClick={handleRowClick} />
         </Box>
       </Box>
     </Box>

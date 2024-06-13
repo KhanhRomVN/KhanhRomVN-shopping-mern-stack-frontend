@@ -5,14 +5,13 @@ import axios from 'axios'
 import HeaderBar from '~/components/HeaderBar/HeaderBar'
 import SideBar from '~/components/SideBar/SideBar'
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import ShareIcon from '@mui/icons-material/Share'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
+import { BACKEND_URI } from '~/API'
 
 const ProductPage = () => {
   const { prod_id } = useParams()
@@ -22,7 +21,7 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.post('https://shopping-mern-stack-backend.onrender.com/product/product', {
+        const response = await axios.post(`${BACKEND_URI}/product/product`, {
           prod_id,
         })
         if (response.data && response.data.products && response.data.products.length > 0) {
@@ -38,6 +37,26 @@ const ProductPage = () => {
 
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue)
+  }
+
+  const addToCart = async () => {
+    const token = localStorage.getItem('accessToken')
+    try {
+      await axios.post(
+        `${BACKEND_URI}/cart/add/cart`,
+        { prodId: prod_id },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            accessToken: token,
+          },
+        },
+      )
+      alert('Product added to cart successfully!')
+    } catch (error) {
+      console.error('Error adding product to cart:', error)
+      alert('Failed to add product to cart.')
+    }
   }
 
   if (!product) {
@@ -82,7 +101,6 @@ const ProductPage = () => {
             <Box sx={{ height: '520px', overflow: 'hidden' }}>
               <img src={product.image} alt={product.name} style={{ height: '100%', objectFit: 'cover' }} />
             </Box>
-            {/* <Box sx={{ width: '100%', height: '80px', backgroundColor: 'white' }}></Box> */}
           </Box>
 
           {/* Right */}
@@ -123,7 +141,7 @@ const ProductPage = () => {
               </Tabs>
               {tabIndex === 'description' && (
                 <Box sx={{ padding: '18px', maxHeight: '358px', overflowY: 'auto' }}>
-                  <Typography sx={{ maxHeight: '358px' }}>
+                  <Typography>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Error minima corporis deserunt esse,
                     consequuntur dolor facere tempora commodi itaque maiores illum aperiam cum adipisci voluptatibus
                     quod. Numquam sequi magnam vel! Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
@@ -172,12 +190,12 @@ const ProductPage = () => {
           }}
         ></Box>
       </Box>
-      <FixedBar productPrice={product.price} />
+      <FixedBar productPrice={product.price} addToCart={addToCart} />
     </Box>
   )
 }
 
-const FixedBar = ({ productPrice }) => {
+const FixedBar = ({ productPrice, addToCart }) => {
   return (
     <Box
       sx={{
@@ -208,6 +226,7 @@ const FixedBar = ({ productPrice }) => {
           borderRadius: '60px',
           padding: '4px 6px 4px 12px',
         }}
+        onClick={addToCart}
       >
         <Typography variant="h10">Add to Cart</Typography>
         <Box sx={{ backgroundColor: 'white', padding: '4px', borderRadius: '40px' }}>

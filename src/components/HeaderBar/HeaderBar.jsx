@@ -13,10 +13,12 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Mail as MailIcon, Notifications as NotificationsIcon, Search as SearchIcon } from '@mui/icons-material'
 import { styled, alpha } from '@mui/material/styles'
+const logo = '../../../public/images/logo.png'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: '20px',
+  color: 'black',
   backgroundColor: alpha(theme.palette.common.black, 0.1),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.black, 0.15),
@@ -63,66 +65,75 @@ const HeaderBar = () => {
   }
 
   return (
-    <>
-      <AppBar
-        position="fixed"
-        sx={{
-          height: '55px',
-          justifyContent: 'center',
-          backgroundColor: 'white',
-          color: 'black',
-          boxShadow: 'none',
-        }}
-      >
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6" noWrap component="div">
+    <AppBar
+      position="fixed"
+      sx={{
+        height: '55px',
+        justifyContent: 'center',
+        backgroundColor: (theme) => theme.palette.backgroundColor.primary,
+        boxShadow: 'none',
+      }}
+    >
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* <Typography variant="h6" noWrap component="div">
             logo
-          </Typography>
-          <Search>
-            <SearchIcon sx={{ color: 'gray' }} />
-            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-          </Search>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {user ? (
-              <>
-                <IconButton color="inherit">
-                  <MailIcon />
-                </IconButton>
-                <IconButton color="inherit">
-                  <NotificationsIcon />
-                </IconButton>
-                <IconButton onClick={handleMenu}>
-                  <Avatar alt="User Avatar" src={user.avatarUrl} />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      transform: 'translateY(40px)',
-                    },
+          </Typography> */}
+        <Box sx={{ height: '48%' }}>
+          <img src={logo} alt="logo" style={{ objectFit: 'cover', height: '100%' }} />
+        </Box>
+        <Search>
+          <SearchIcon sx={{ color: 'gray' }} />
+          <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+        </Search>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {user ? (
+            <>
+              <IconButton color="inherit">
+                <MailIcon
+                  sx={{
+                    color: (theme) => theme.palette.textColor.secondary,
                   }}
-                >
-                  <MenuItem onClick={() => navigate('/settings')}>Settings</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <Button
-                color="inherit"
-                onClick={() => {
-                  // Logic for Login
+                />
+              </IconButton>
+              <IconButton color="inherit">
+                <NotificationsIcon
+                  sx={{
+                    color: (theme) => theme.palette.textColor.secondary,
+                  }}
+                />
+              </IconButton>
+              <IconButton onClick={handleMenu}>
+                <Avatar alt="User Avatar" src={user.avatarUrl} sx={{ width: '30px', height: '30px' }} />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    transformY: '1px',
+                  },
                 }}
               >
-                Login
-              </Button>
-            )}
-          </Box>
-        </Toolbar>
-        <Divider />
-      </AppBar>
-    </>
+                <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+                <MenuItem onClick={() => navigate('/setting')}>Settings</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button
+              color="inherit"
+              onClick={() => {
+                // Logic for Login
+              }}
+            >
+              Login
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+      <Divider />
+    </AppBar>
   )
 }
 
