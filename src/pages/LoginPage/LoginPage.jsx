@@ -20,17 +20,16 @@ function LoginPage() {
         email,
         password,
       })
-      const { accessToken, refreshToken, user } = response.data
+      const { accessToken, refreshToken, currentUser } = response.data
 
       // Lưu dữ liệu vào localStorage
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('refreshToken', refreshToken)
-      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('currentUser', JSON.stringify(currentUser))
 
       setSuccess('Login successful!')
       setError('')
 
-      // Chuyển hướng tới trang chủ
       navigate('/')
     } catch (err) {
       setError('Login failed. Please check your email and password.')

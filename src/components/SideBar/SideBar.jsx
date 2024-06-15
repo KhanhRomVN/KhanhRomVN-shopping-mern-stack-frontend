@@ -21,7 +21,7 @@ const menuItems = [
       { text: 'Dashboard', icon: <Home fontSize="small" />, path: '/' },
       { text: 'Cart', icon: <ShoppingCart fontSize="small" />, path: '/cart' },
       { text: 'Feed', icon: <People fontSize="small" />, path: '/feed' },
-      { text: 'Message', icon: <Message fontSize="small" />, path: '/message' },
+      { text: 'Message', icon: <Message fontSize="small" />, path: '/chat' },
     ],
   },
   {

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export const BACKEND_URI = 'https://shopping-mern-stack-backend.onrender.com'
-// export const BACKEND_URI = 'http://localhost:8080'
+// export const BACKEND_URI = 'https://shopping-mern-stack-backend.onrender.com'
+export const BACKEND_URI = 'http://localhost:8080'
 
 // authAPI
 export const loginAPI = `${BACKEND_URI}/auth/login`
@@ -22,7 +22,7 @@ export const addProduct = async (accessToken, productData) => {
     const response = await axios.post(`${BACKEND_URI}/product/add-product`, productData, {
       headers: {
         'Content-Type': 'application/json',
-        accessToken,
+        accessToken: accessToken,
       },
     })
     return response

@@ -13,7 +13,7 @@ function HomePage() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const user = JSON.parse(localStorage.getItem('user'))
+      const user = JSON.parse(localStorage.getItem('currentUser'))
       if (user && user.username) {
         setUsername(user.username)
       } else {

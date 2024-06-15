@@ -13,6 +13,8 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Mail as MailIcon, Notifications as NotificationsIcon, Search as SearchIcon } from '@mui/icons-material'
 import { styled, alpha } from '@mui/material/styles'
+import axios from 'axios' // Import Axios
+import { BACKEND_URI } from '~/API'
 const logo = '../../../public/images/logo.png'
 
 const Search = styled('div')(({ theme }) => ({
@@ -45,7 +47,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const HeaderBar = () => {
   const navigate = useNavigate()
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('currentUser'))
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
@@ -57,11 +59,30 @@ const HeaderBar = () => {
     setAnchorEl(null)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    navigate('/login')
+  const handleLogout = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken')
+
+      await axios.post(
+        `${BACKEND_URI}/auth/logout`,
+        {},
+        {
+          headers: {
+            accessToken: accessToken,
+          },
+        },
+      )
+
+      // Clear local storage items upon successful logout
+      localStorage.removeItem('user')
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+
+      navigate('/login')
+    } catch (error) {
+      console.error('Error logging out:', error)
+      // Handle error, show alert, etc.
+    }
   }
 
   return (
@@ -75,9 +96,6 @@ const HeaderBar = () => {
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* <Typography variant="h6" noWrap component="div">
-            logo
-          </Typography> */}
         <Box sx={{ height: '48%' }}>
           <img src={logo} alt="logo" style={{ objectFit: 'cover', height: '100%' }} />
         </Box>
@@ -115,7 +133,7 @@ const HeaderBar = () => {
                   },
                 }}
               >
-                <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+                <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Profile</MenuItem>
                 <MenuItem onClick={() => navigate('/setting')}>Settings</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>

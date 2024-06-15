@@ -16,37 +16,18 @@ const CartPage = () => {
 
   useEffect(() => {
     const fetchCartData = async () => {
-      const token = localStorage.getItem('accessToken')
+      const accessToken = localStorage.getItem('accessToken')
       try {
-        const cartResponse = await axios.post(
-          `${BACKEND_URI}/cart/carts`,
+        const response = await axios.post(
+          `${BACKEND_URI}/cart/get-carts`,
           {},
           {
             headers: {
-              'Content-Type': 'application/json',
-              accessToken: token,
+              accessToken: accessToken,
             },
           },
         )
-        console.log(cartResponse)
-
-        const cartList = cartResponse.data.carts.cartList
-        const productRequests = cartList.map((prodId) =>
-          axios.post(
-            `${BACKEND_URI}/product/product`,
-            { prod_id: prodId },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                accessToken: token,
-              },
-            },
-          ),
-        )
-
-        const productResponses = await Promise.all(productRequests)
-        const fetchedProducts = productResponses.map((response) => response.data.products[0])
-        setProducts(fetchedProducts)
+        setProducts(response.data.productList)
       } catch (error) {
         console.error('Error fetching cart data', error)
       }

@@ -21,11 +21,11 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.post(`${BACKEND_URI}/product/product`, {
+        const response = await axios.post(`${BACKEND_URI}/product/get-product`, {
           prod_id,
         })
-        if (response.data && response.data.products && response.data.products.length > 0) {
-          setProduct(response.data.products[0])
+        if (response.data && response.data.product) {
+          setProduct(response.data.product)
         }
       } catch (error) {
         console.error('Error fetching product:', error)
@@ -43,8 +43,8 @@ const ProductPage = () => {
     const token = localStorage.getItem('accessToken')
     try {
       await axios.post(
-        `${BACKEND_URI}/cart/add/cart`,
-        { prodId: prod_id },
+        `${BACKEND_URI}/cart/add-cart`,
+        { prod_id: prod_id },
         {
           headers: {
             'Content-Type': 'application/json',

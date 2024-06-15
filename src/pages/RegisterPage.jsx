@@ -1,169 +1,120 @@
 import React, { useState } from 'react'
-import { Container, Grid, TextField, Button, Typography, Box, Alert } from '@mui/material'
+import { Container, Grid, TextField, Button, Typography, Box, Select, MenuItem } from '@mui/material'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { registerAPI } from '~/API'
-import ModeSelect from '~/components/ModeSelect'
-const loginBG = '/images/public-img4.jpg'
+import { BACKEND_URI } from '~/API'
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    name: '',
-    age: '',
-    email: '',
-    password: '',
-    sdt: '',
-    address: '',
-  })
-
-  const [error, setError] = useState(null)
   const navigate = useNavigate()
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [age, setAge] = useState('')
+  const [gender, setGender] = useState('')
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const userData = {
+      username,
+      email,
+      password,
+      name,
+      age,
+      gender,
+    }
     try {
-      const response = await axios.post(registerAPI, formData)
-      if (response.status === 201) {
-        navigate('/login')
-      }
+      const response = await axios.post(`${BACKEND_URI}/auth/register`, userData)
+      console.log('Registration successful:', response.data)
+      navigate('/login')
     } catch (error) {
-      setError(error.response.data.error || 'Registration failed. Please try again.')
+      console.error('Error registering user:', error)
     }
   }
 
   return (
-    <>
-      <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 1000 }}>
-        <ModeSelect />
-      </div>
-      <Grid container style={{ minHeight: '100vh' }}>
-        <Grid item xs={12} md={7} style={{ position: 'relative', overflow: 'hidden' }}>
-          <Container maxWidth="sm">
-            <Box sx={{ mt: 8 }}>
-              <Typography variant="h4" gutterBottom align="center">
-                Register Page
-              </Typography>
-              {error && <Alert severity="error">{error}</Alert>}
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Username"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Age"
-                      name="age"
-                      type="number"
-                      value={formData.age}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Password"
-                      name="password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Phone Number"
-                      name="sdt"
-                      value={formData.sdt}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
-                      Register
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Box>
-          </Container>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={5}
-          container
-          alignItems="center"
-          justifyContent="center"
-          style={{
-            position: 'relative',
-          }}
-        >
-          <img
-            src={loginBG}
-            alt="Login Background"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-            }}
-          />
-        </Grid>
-      </Grid>
-    </>
+    <Box sx={{ width: '100vw', height: '100vh', display: 'flex' }}>
+      {/* Left Box for Image (Replace with your image component or styling) */}
+      <Box sx={{ width: '50%', height: '100%', backgroundColor: 'red' }}></Box>
+
+      {/* Right Box for Registration Form */}
+      <Box sx={{ width: '50%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Container maxWidth="sm">
+          <Typography variant="h4" gutterBottom align="center">
+            Register
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Username"
+                  variant="outlined"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  variant="outlined"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Age"
+                  type="number"
+                  variant="outlined"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Select
+                  fullWidth
+                  label="Gender"
+                  variant="outlined"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" fullWidth variant="contained" color="primary">
+                  Register
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Container>
+      </Box>
+    </Box>
   )
 }
 

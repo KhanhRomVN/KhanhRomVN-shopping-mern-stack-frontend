@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
@@ -10,19 +10,20 @@ import InputLabel from '@mui/material/InputLabel'
 import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { v4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import HeaderBar from '~/components/HeaderBar/HeaderBar'
 import SideBar from '~/components/SideBar/SideBar'
 import { imageDB } from '~/firebase/firebaseConfig'
-import { fetchProducts, addProduct, updateUserRole } from '~/API'
+import axios from 'axios' // Import Axios for API calls
 import { initialState, reducer } from './reducer'
+import { BACKEND_URI } from '~/API'
 
 const MyProductPage = () => {
   const navigate = useNavigate()
   const [{ user, showForm, formData, products }, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    const userData = localStorage.getItem('user')
+    const userData = localStorage.getItem('currentUser')
     if (userData) {
       dispatch({ type: 'SET_USER', payload: JSON.parse(userData) })
     }
@@ -32,10 +33,18 @@ const MyProductPage = () => {
     const loadProducts = async () => {
       const accessToken = localStorage.getItem('accessToken')
       try {
-        const products = await fetchProducts(accessToken)
-        dispatch({ type: 'SET_PRODUCTS', payload: products })
+        const response = await axios.post(
+          `${BACKEND_URI}/product/get-products`,
+          {},
+          {
+            headers: {
+              accessToken: accessToken,
+            },
+          },
+        )
+        dispatch({ type: 'SET_PRODUCTS', payload: response.data.products })
       } catch (error) {
-        console.error(error.message)
+        console.error('Error fetching products:', error.message)
       }
     }
     loadProducts()
@@ -56,20 +65,27 @@ const MyProductPage = () => {
       let imageURL = ''
 
       if (formData.image) {
-        const imageRef = ref(imageDB, `images/${v4()}`)
+        const imageRef = ref(imageDB, `images/${uuidv4()}`) // Generate unique image filename
         const snapshot = await uploadBytes(imageRef, formData.image)
         imageURL = await getDownloadURL(snapshot.ref)
       }
 
       const productData = {
         name: formData.name,
-        type: formData.category,
+        description: formData.description,
         price: parseInt(formData.price),
-        discount: parseInt(formData.discount),
+        category: formData.category,
+        inventory: parseInt(formData.inventory),
         image: imageURL,
       }
 
-      const response = await addProduct(accessToken, productData)
+      const response = await axios.post(`${BACKEND_URI}/product/add-product`, productData, {
+        headers: {
+          accessToken: accessToken,
+          'Content-Type': 'application/json',
+        },
+      })
+
       if (response.status === 201) {
         dispatch({ type: 'SET_PRODUCTS', payload: [...products, productData] })
         dispatch({ type: 'TOGGLE_FORM' })
@@ -77,23 +93,32 @@ const MyProductPage = () => {
         console.error('Failed to add product:', response.statusText)
       }
     } catch (error) {
-      console.error(error.message)
+      console.error('Error adding product:', error.message)
     }
   }
 
   const handleBecomeSeller = async () => {
     const accessToken = localStorage.getItem('accessToken')
     try {
-      const response = await updateUserRole(accessToken)
+      const response = await axios.put(
+        `${BACKEND_URI}/user/update-role`,
+        {},
+        {
+          headers: {
+            accessToken: accessToken,
+          },
+        },
+      )
+
       if (response.status === 200) {
         const updatedUser = { ...user, role: 'seller' }
-        localStorage.setItem('user', JSON.stringify(updatedUser))
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser))
         dispatch({ type: 'SET_USER', payload: updatedUser })
       } else {
         console.error('Failed to update user role:', response.statusText)
       }
     } catch (error) {
-      console.error(error.message)
+      console.error('Error updating user role:', error.message)
     }
   }
 
@@ -102,18 +127,17 @@ const MyProductPage = () => {
   }
 
   const columns = [
-    { field: 'stt', headerName: 'STT', width: 70 },
     { field: '_id', headerName: 'ID', width: 220 },
     { field: 'name', headerName: 'Name', width: 150 },
-    { field: 'type', headerName: 'Type', width: 130 },
+    { field: 'category', headerName: 'Category', width: 130 },
     { field: 'price', headerName: 'Price', width: 100 },
-    { field: 'discount', headerName: 'Discount', width: 100 },
+    { field: 'description', headerName: 'Description', width: 200 },
+    { field: 'inventory', headerName: 'Inventory', width: 120 },
     { field: 'updatedAt', headerName: 'Updated At', width: 200 },
   ]
 
   const rows = products.map((product, index) => ({
-    id: index + 1,
-    stt: index + 1,
+    id: product._id,
     ...product,
   }))
 
@@ -180,6 +204,13 @@ const MyProductPage = () => {
                 variant="outlined"
               />
               <TextField
+                label="Description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                variant="outlined"
+              />
+              <TextField
                 label="Price"
                 name="price"
                 value={formData.price}
@@ -187,9 +218,9 @@ const MyProductPage = () => {
                 variant="outlined"
               />
               <TextField
-                label="Discount"
-                name="discount"
-                value={formData.discount}
+                label="Inventory"
+                name="inventory"
+                value={formData.inventory}
                 onChange={handleInputChange}
                 variant="outlined"
               />
@@ -204,7 +235,7 @@ const MyProductPage = () => {
                   label="Category"
                 >
                   <MenuItem value="fashion">Fashion</MenuItem>
-                  <MenuItem value="electronic">Electronic</MenuItem>
+                  <MenuItem value="electronics">Electronics</MenuItem>
                   <MenuItem value="home_appliances">Home Appliances</MenuItem>
                   <MenuItem value="mother_and_baby">Mother & Baby</MenuItem>
                   <MenuItem value="health_and_beauty">Health & Beauty</MenuItem>
