@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// export const BACKEND_URI = 'https://salesobe.onrender.com'
-export const BACKEND_URI = 'http://localhost:8080'
+export const BACKEND_URI = 'https://salesobe.onrender.com'
+// export const BACKEND_URI = 'http://localhost:8080'
 
 // authAPI
 export const loginAPI = `${BACKEND_URI}/auth/login`
