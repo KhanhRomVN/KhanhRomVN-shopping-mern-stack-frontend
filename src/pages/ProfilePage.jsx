@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import AppBar from '@mui/material/AppBar'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Avatar from '@mui/material/Avatar'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import Button from '@mui/material/Button'
+import { AppBar, Typography, Box, Avatar, Tabs, Tab, Button } from '@mui/material'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
@@ -66,17 +60,11 @@ const ProfilePage = () => {
   const [uploading, setUploading] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
 
-  useEffect(() => {
-    fetchUserData()
-  }, [username])
-
   const fetchUserData = useCallback(async () => {
     try {
       const response = await axios.post(`${BACKEND_URI}/user/user-detail`, { username })
       const fetchedUser = response.data
       setUser(fetchedUser)
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
-      setIsCurrentUser(currentUser?.username === fetchedUser.username)
       checkIfFriend(fetchedUser.user_id)
     } catch (error) {
       console.error('Error fetching user data:', error)
@@ -96,6 +84,15 @@ const ProfilePage = () => {
       console.error('Error checking friend status:', error)
     }
   }, [])
+
+  useEffect(() => {
+    fetchUserData()
+  }, [fetchUserData])
+
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+    setIsCurrentUser(currentUser?.username === user.username)
+  }, [user])
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]
@@ -173,12 +170,14 @@ const ProfilePage = () => {
           <Avatar
             alt="Avatar"
             src={user.avatar_uri || '/static/images/avatar/default.jpg'}
-            sx={{
-              width: '90px',
-              height: '90px',
-            }}
+            sx={{ width: '90px', height: '90px' }}
           />
           <Typography variant="h5">{user.username}</Typography>
+          {!isCurrentUser && !isFriend && (
+            <Button variant="contained" onClick={handleAddFriend}>
+              Add Friend
+            </Button>
+          )}
         </Box>
       </Box>
 
@@ -192,11 +191,11 @@ const ProfilePage = () => {
         </Box>
         <Box sx={styles.userInfoContainer}>
           <Typography variant="h6">User Information</Typography>
-          <Typography variant="h7">Username: {user.username}</Typography>
-          <Typography variant="h7">Role: {user.role}</Typography>
-          <Typography variant="h7">Name: {user.name}</Typography>
-          <Typography variant="h7">About: {user.about}</Typography>
-          <Typography variant="h7">Address: {user.address}</Typography>
+          <Typography variant="body1">Username: {user.username}</Typography>
+          <Typography variant="body1">Role: {user.role}</Typography>
+          <Typography variant="body1">Name: {user.name}</Typography>
+          <Typography variant="body1">About: {user.about}</Typography>
+          <Typography variant="body1">Address: {user.address}</Typography>
         </Box>
       </Box>
     </>

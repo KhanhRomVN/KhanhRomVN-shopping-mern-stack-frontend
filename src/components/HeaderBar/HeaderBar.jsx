@@ -55,7 +55,7 @@ const HeaderBar = () => {
           },
         },
       )
-      localStorage.removeItem('user')
+      localStorage.removeItem('currentUser')
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
 
@@ -132,14 +132,14 @@ const HeaderBar = () => {
                 width: '100%',
                 maxHeight: '300px',
                 overflowY: 'auto',
-                backgroundColor: 'white',
+                backgroundColor: (theme) => theme.palette.backgroundColor.secondary,
                 boxShadow: 1,
                 zIndex: 1,
               }}
             >
               {searchResults.map((result) => (
                 <MenuItem key={result.username} onClick={() => navigate(`/profile/${result.username}`)}>
-                  {result.username} - {result.email}
+                  {result.username}
                 </MenuItem>
               ))}
             </Box>
@@ -174,6 +174,7 @@ const HeaderBar = () => {
             }}
           >
             <ModeSelect />
+            <MenuItem onClick={() => navigate('/')}>Home</MenuItem>
             <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Profile</MenuItem>
             <MenuItem onClick={() => navigate('/setting')}>Settings</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
