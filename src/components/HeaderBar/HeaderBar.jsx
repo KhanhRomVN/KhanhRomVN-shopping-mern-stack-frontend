@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
-import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
@@ -13,35 +11,18 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Mail as MailIcon, Notifications as NotificationsIcon, Search as SearchIcon } from '@mui/icons-material'
 import { styled, alpha } from '@mui/material/styles'
-import axios from 'axios' // Import Axios
+import axios from 'axios'
 import { BACKEND_URI } from '~/API'
-const logo = '../../../public/images/logo.png'
+import ModeSelect from '../ModeSelect'
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: '20px',
-  color: 'black',
-  backgroundColor: alpha(theme.palette.common.black, 0.1),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.black, 0.15),
-  },
-  marginLeft: theme.spacing(1),
-  width: '440px',
-  height: '38px',
-  display: 'flex',
-  alignItems: 'center',
-  padding: '0 10px',
-}))
+const textColorPrimary = (theme) => theme.palette.textColor.primary
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1),
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
+    width: '440px',
   },
 }))
 
@@ -49,6 +30,8 @@ const HeaderBar = () => {
   const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem('currentUser'))
   const [anchorEl, setAnchorEl] = useState(null)
+  const [searchResults, setSearchResults] = useState([])
+  const [searchInput, setSearchInput] = useState('')
   const open = Boolean(anchorEl)
 
   const handleMenu = (event) => {
@@ -72,8 +55,6 @@ const HeaderBar = () => {
           },
         },
       )
-
-      // Clear local storage items upon successful logout
       localStorage.removeItem('user')
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
@@ -81,7 +62,27 @@ const HeaderBar = () => {
       navigate('/login')
     } catch (error) {
       console.error('Error logging out:', error)
-      // Handle error, show alert, etc.
+    }
+  }
+
+  const handleSearchInputChange = async (event) => {
+    const input = event.target.value
+    setSearchInput(input)
+
+    if (input) {
+      try {
+        const response = await axios.get(`${BACKEND_URI}/user/get-all-friend`)
+        const filteredResults = response.data.filter(
+          (friend) =>
+            friend.username.toLowerCase().includes(input.toLowerCase()) ||
+            friend.email.toLowerCase().includes(input.toLowerCase()),
+        )
+        setSearchResults(filteredResults)
+      } catch (error) {
+        console.error('Error fetching search results:', error)
+      }
+    } else {
+      setSearchResults([])
     }
   }
 
@@ -97,57 +98,86 @@ const HeaderBar = () => {
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box sx={{ height: '48%' }}>
-          <img src={logo} alt="logo" style={{ objectFit: 'cover', height: '100%' }} />
+          <img
+            src="https://i.ibb.co/qYVGwzH/logo-light.png"
+            alt="logo"
+            style={{ objectFit: 'cover', height: '100%' }}
+          />
+          {/* <img src="https://i.ibb.co/R4Ccckw/logo-dark.png" alt="logo" style={{ objectFit: 'cover', height: '100%' }} /> */}
         </Box>
-        <Search>
+        <Box
+          sx={{
+            position: 'relative',
+            border: `1px solid ${textColorPrimary}`,
+            borderRadius: '20px',
+            width: '440px',
+            height: '38px',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 10px',
+          }}
+        >
           <SearchIcon sx={{ color: 'gray' }} />
-          <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-        </Search>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {user ? (
-            <>
-              <IconButton color="inherit">
-                <MailIcon
-                  sx={{
-                    color: (theme) => theme.palette.textColor.secondary,
-                  }}
-                />
-              </IconButton>
-              <IconButton color="inherit">
-                <NotificationsIcon
-                  sx={{
-                    color: (theme) => theme.palette.textColor.secondary,
-                  }}
-                />
-              </IconButton>
-              <IconButton onClick={handleMenu}>
-                <Avatar alt="User Avatar" src={user.avatarUrl} sx={{ width: '30px', height: '30px' }} />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    transformY: '1px',
-                  },
-                }}
-              >
-                <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Profile</MenuItem>
-                <MenuItem onClick={() => navigate('/setting')}>Settings</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button
-              color="inherit"
-              onClick={() => {
-                // Logic for Login
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'search' }}
+            value={searchInput}
+            onChange={handleSearchInputChange}
+          />
+          {searchResults.length > 0 && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '40px',
+                width: '100%',
+                maxHeight: '300px',
+                overflowY: 'auto',
+                backgroundColor: 'white',
+                boxShadow: 1,
+                zIndex: 1,
               }}
             >
-              Login
-            </Button>
+              {searchResults.map((result) => (
+                <MenuItem key={result.username} onClick={() => navigate(`/profile/${result.username}`)}>
+                  {result.username} - {result.email}
+                </MenuItem>
+              ))}
+            </Box>
           )}
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton color="inherit">
+            <MailIcon
+              sx={{
+                color: (theme) => theme.palette.textColor.secondary,
+              }}
+            />
+          </IconButton>
+          <IconButton color="inherit">
+            <NotificationsIcon
+              sx={{
+                color: (theme) => theme.palette.textColor.secondary,
+              }}
+            />
+          </IconButton>
+          <IconButton onClick={handleMenu}>
+            <Avatar alt="User Avatar" src={user.avatarUrl} sx={{ width: '30px', height: '30px' }} />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                transformY: '1px',
+              },
+            }}
+          >
+            <ModeSelect />
+            <MenuItem onClick={() => navigate(`/profile/${user.username}`)}>Profile</MenuItem>
+            <MenuItem onClick={() => navigate('/setting')}>Settings</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
         </Box>
       </Toolbar>
       <Divider />

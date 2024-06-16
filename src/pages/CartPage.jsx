@@ -57,113 +57,113 @@ const CartPage = () => {
   return (
     <Box
       sx={{
-        backgroundColor: '#f3f3f3',
+        width: 'auto',
+        height: '550px',
+        marginTop: (theme) => theme.other.headerBarHeight,
+        marginLeft: (theme) => theme.other.marginLeftWidth,
         boxSizing: 'border-box',
+        padding: '8px',
+        display: 'flex',
+        gap: '10px',
       }}
     >
-      <HeaderBar />
-      <SideBar />
       <Box
         sx={{
-          width: 'auto',
-          marginTop: (theme) => theme.other.headerBarHeight,
-          marginLeft: (theme) => theme.other.marginLeftWidth,
+          width: '700px',
+          height: '100%',
+          backgroundColor: (theme) => theme.palette.backgroundColor.primary,
           boxSizing: 'border-box',
-          padding: '10px',
-          display: 'flex',
-          gap: '10px',
+          padding: '8px',
+          borderRadius: '8px',
         }}
       >
-        {/* Cart Product */}
-        <Box sx={{ flexGrow: '2', height: '520px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {products.length > 0 ? (
-            products.map((product) => (
+        {products.length > 0 ? (
+          products.map((product) => (
+            <Box
+              key={product._id}
+              sx={{
+                width: '100%',
+                height: '100px',
+                backgroundColor: (theme) => theme.palette.backgroundColor.secondary,
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                boxSizing: 'border-box',
+                padding: '8px',
+                justifyContent: 'space-between',
+              }}
+            >
               <Box
-                key={product._id}
                 sx={{
-                  height: '160px',
-                  backgroundColor: 'white',
-                  borderRadius: '8px',
+                  height: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  boxSizing: 'border-box',
-                  padding: '0 20px 0 4px',
                 }}
               >
+                <Checkbox checked={selectedProducts.includes(product)} onChange={() => handleCheckboxChange(product)} />
+                <Box
+                  sx={{
+                    height: '100%',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginRight: '12px',
+                  }}
+                >
+                  <img src={product.image} alt={product.name} style={{ height: '100%', objectFit: 'cover' }} />
+                </Box>
                 <Box
                   sx={{
                     height: '100%',
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '18px',
-                    flexGrow: '2',
-                  }}
-                >
-                  <Checkbox
-                    checked={selectedProducts.includes(product)}
-                    onChange={() => handleCheckboxChange(product)}
-                  />
-                  <Box sx={{ height: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-                    <img src={product.image} alt={product.name} style={{ height: '80%', objectFit: 'cover' }} />
-                  </Box>
-                  <Box
-                    sx={{
-                      height: '80%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'start',
-                      width: '480px',
-                    }}
-                  >
-                    <Typography variant="h7" sx={{ fontWeight: '600' }}>
-                      {product.name}
-                    </Typography>
-                    <Typography variant="h8">{product.type}</Typography>
-                    <DeleteIcon />
-                  </Box>
-                  <IconButton
-                    onClick={() => handleDeleteProduct(product._id)}
-                    aria-label="delete"
-                    sx={{ alignSelf: 'start' }}
-                  ></IconButton>
-                </Box>
-                <Box
-                  sx={{
-                    height: '80%',
-                    display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'start',
-                    alignItems: 'end',
-                    flexGrow: '1',
+                    width: '300px',
                   }}
                 >
-                  <Typography variant="h8" sx={{ fontWeight: '600' }}>
-                    {product.price} VND
+                  <Typography variant="h7" sx={{ fontWeight: '600' }}>
+                    {product.name}
                   </Typography>
+                  <Typography variant="h8">{product.category}</Typography>
                 </Box>
+                <IconButton
+                  onClick={() => handleDeleteProduct(product._id)}
+                  aria-label="delete"
+                  sx={{ alignSelf: 'start' }}
+                ></IconButton>
               </Box>
-            ))
-          ) : (
-            <p>Loading cart...</p>
-          )}
-        </Box>
-        {/* Payment Information */}
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            flexGrow: '10',
-            padding: '16px',
-          }}
-        >
-          <h3>Payment Information</h3>
-          <p>Total items: {totalItems}</p>
-          <p>Total price: {totalPrice} VND</p>
-          <Button variant="contained" color="primary">
-            Checkout
-          </Button>
-        </Box>
+              <Box
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                }}
+              >
+                <Typography variant="h8" sx={{ fontWeight: '600' }}>
+                  {product.price}
+                </Typography>
+              </Box>
+            </Box>
+          ))
+        ) : (
+          <p>Nothing!</p>
+        )}
+      </Box>
+      <Box
+        sx={{
+          width: '500px',
+          height: '100%',
+          backgroundColor: (theme) => theme.palette.backgroundColor.primary,
+          boxSizing: 'border-box',
+          padding: '8px',
+          borderRadius: '8px',
+        }}
+      >
+        <h3>Payment Information</h3>
+        <p>Total items: {totalItems}</p>
+        <p>Total price: {totalPrice} VND</p>
+        <Button variant="contained" color="primary">
+          Checkout
+        </Button>
       </Box>
     </Box>
   )

@@ -28,23 +28,17 @@ function HomePage() {
   return (
     <Box
       sx={{
-        backgroundColor: '#f3f3f3',
+        width: 'auto',
+        marginTop: (theme) => theme.other.headerBarHeight,
+        marginLeft: (theme) => theme.other.marginLeftWidth,
         boxSizing: 'border-box',
+        padding: '8px',
       }}
     >
-      <HeaderBar />
-      <SideBar />
-      <Box
-        sx={{
-          width: 'auto',
-          marginTop: (theme) => theme.other.headerBarHeight,
-          marginLeft: (theme) => theme.other.marginLeftWidth,
-          boxSizing: 'border-box',
-          padding: '8px',
-        }}
-      >
-        <TabUI product_types={['Fashion', 'Electronics', 'Home Appliances', 'Mother & Baby']} />
+      <Box sx={{ width: '100%', height: '320px', backgroundColor: (theme) => theme.palette.backgroundColor.primary }}>
+        Đây là phần banner(nhưng tôi lười import ảnh vào)
       </Box>
+      <TabUI product_types={['Fashion', 'Electronics', 'Home Appliances', 'Mother & Baby']} />
     </Box>
   )
 }

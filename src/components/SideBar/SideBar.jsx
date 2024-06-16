@@ -1,43 +1,40 @@
-import React from 'react'
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Typography, Box } from '@mui/material'
-import {
-  Home,
-  ShoppingCart,
-  People,
-  Message,
-  Category,
-  Assessment,
-  LocalOffer,
-  Settings,
-  Security,
-  Help,
-} from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined'
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
+import DynamicFeedOutlinedIcon from '@mui/icons-material/DynamicFeedOutlined'
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined'
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
+import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined'
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 
 const menuItems = [
   {
     title: 'Menu',
     items: [
-      { text: 'Dashboard', icon: <Home fontSize="small" />, path: '/' },
-      { text: 'Cart', icon: <ShoppingCart fontSize="small" />, path: '/cart' },
-      { text: 'Feed', icon: <People fontSize="small" />, path: '/feed' },
-      { text: 'Message', icon: <Message fontSize="small" />, path: '/chat' },
+      { text: 'Dashboard', icon: <SpaceDashboardOutlinedIcon fontSize="small" />, path: '/' },
+      { text: 'Cart', icon: <ShoppingCartOutlinedIcon fontSize="small" />, path: '/cart' },
+      { text: 'Feed', icon: <DynamicFeedOutlinedIcon fontSize="small" />, path: '/feed' },
+      { text: 'Message', icon: <ChatOutlinedIcon fontSize="small" />, path: '/chat' },
     ],
   },
   {
     title: 'Tools',
     items: [
-      { text: 'Product', icon: <Category fontSize="small" />, path: '/my-product' },
-      { text: 'Analytic', icon: <Assessment fontSize="small" />, path: '/analytic' },
-      { text: 'Discount', icon: <LocalOffer fontSize="small" />, path: '/discount' },
+      { text: 'Product', icon: <CategoryOutlinedIcon fontSize="small" />, path: '/my-product' },
+      { text: 'Analytic', icon: <QueryStatsOutlinedIcon fontSize="small" />, path: '/analytic' },
+      { text: 'Discount', icon: <LocalOfferOutlinedIcon fontSize="small" />, path: '/discount' },
     ],
   },
   {
     title: 'Others',
     items: [
-      { text: 'Setting', icon: <Settings fontSize="small" />, path: '/setting' },
-      { text: 'Security', icon: <Security fontSize="small" />, path: '/security' },
-      { text: 'Help', icon: <Help fontSize="small" />, path: '/help' },
+      { text: 'Setting', icon: <SettingsOutlinedIcon fontSize="small" />, path: '/setting' },
+      { text: 'Security', icon: <GppGoodOutlinedIcon fontSize="small" />, path: '/security' },
+      { text: 'Help', icon: <HelpOutlineOutlinedIcon fontSize="small" />, path: '/help' },
     ],
   },
 ]
@@ -69,7 +66,6 @@ const SideBar = () => {
                   padding: '4px 84px 4px 16px',
                   '&:hover': {
                     backgroundColor: (theme) => theme.other.primaryColor,
-                    color: (theme) => theme.palette.hoverColor.primary,
                   },
                 }}
               >

@@ -1,17 +1,12 @@
-import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { publicRoutes } from './routes/routes'
-import { Outlet } from 'react-router-dom'
-import toast, { Toaster } from 'react-hot-toast'
 
 const App = () => {
   return (
     <Router>
-      <Toaster />
-      <Outlet />
       <Routes>
         {publicRoutes.map((route, idx) => (
-          <Route key={idx} path={route.path} element={<route.component />} />
+          <Route key={idx} path={route.path} element={route.element} />
         ))}
       </Routes>
     </Router>

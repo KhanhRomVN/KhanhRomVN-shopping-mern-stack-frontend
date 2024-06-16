@@ -48,91 +48,82 @@ const SettingPage = () => {
   }
 
   return (
-    <Box
-      sx={{
-        backgroundColor: '#f3f3f3',
-        boxSizing: 'border-box',
-      }}
-    >
-      <HeaderBar />
-      <SideBar />
-      <Container maxWidth="md">
-        <Typography variant="h4" gutterBottom>
-          Settings
-        </Typography>
-        <Box component="form" sx={{ mt: 3 }}>
-          <Typography variant="h6">Profile Settings</Typography>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Username"
-            name="username"
-            value={profileSettings.username}
-            onChange={handleProfileChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Email"
-            name="email"
-            value={profileSettings.email}
-            onChange={handleProfileChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Phone Number"
-            name="phoneNumber"
-            value={profileSettings.phoneNumber}
-            onChange={handleProfileChange}
-          />
-          <Divider sx={{ my: 4 }} />
+    <Container maxWidth="md">
+      <Typography variant="h4" gutterBottom>
+        Settings
+      </Typography>
+      <Box component="form" sx={{ mt: 3 }}>
+        <Typography variant="h6">Profile Settings</Typography>
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Username"
+          name="username"
+          value={profileSettings.username}
+          onChange={handleProfileChange}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Email"
+          name="email"
+          value={profileSettings.email}
+          onChange={handleProfileChange}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Phone Number"
+          name="phoneNumber"
+          value={profileSettings.phoneNumber}
+          onChange={handleProfileChange}
+        />
+        <Divider sx={{ my: 4 }} />
 
-          <Typography variant="h6">Account Settings</Typography>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="New Password"
-            type="password"
-            name="password"
-            value={accountSettings.password}
-            onChange={handleAccountChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Confirm Password"
-            type="password"
-            name="confirmPassword"
-            value={accountSettings.confirmPassword}
-            onChange={handleAccountChange}
-          />
-          <Divider sx={{ my: 4 }} />
+        <Typography variant="h6">Account Settings</Typography>
+        <TextField
+          fullWidth
+          margin="normal"
+          label="New Password"
+          type="password"
+          name="password"
+          value={accountSettings.password}
+          onChange={handleAccountChange}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Confirm Password"
+          type="password"
+          name="confirmPassword"
+          value={accountSettings.confirmPassword}
+          onChange={handleAccountChange}
+        />
+        <Divider sx={{ my: 4 }} />
 
-          <Typography variant="h6">Notification Settings</Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Typography>Email Notifications</Typography>
-            <Switch
-              name="emailNotifications"
-              checked={notificationSettings.emailNotifications}
-              onChange={handleNotificationChange}
-            />
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Typography>SMS Notifications</Typography>
-            <Switch
-              name="smsNotifications"
-              checked={notificationSettings.smsNotifications}
-              onChange={handleNotificationChange}
-            />
-          </Box>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save Changes
-          </Button>
-          <ModeSelect />
+        <Typography variant="h6">Notification Settings</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography>Email Notifications</Typography>
+          <Switch
+            name="emailNotifications"
+            checked={notificationSettings.emailNotifications}
+            onChange={handleNotificationChange}
+          />
         </Box>
-      </Container>
-    </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography>SMS Notifications</Typography>
+          <Switch
+            name="smsNotifications"
+            checked={notificationSettings.smsNotifications}
+            onChange={handleNotificationChange}
+          />
+        </Box>
+        <Button variant="contained" color="primary" onClick={handleSave}>
+          Save Changes
+        </Button>
+        <ModeSelect />
+      </Box>
+    </Container>
   )
 }
 

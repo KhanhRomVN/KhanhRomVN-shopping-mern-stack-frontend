@@ -21,8 +21,6 @@ function LoginPage() {
         password,
       })
       const { accessToken, refreshToken, currentUser } = response.data
-
-      // Lưu dữ liệu vào localStorage
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('refreshToken', refreshToken)
       localStorage.setItem('currentUser', JSON.stringify(currentUser))

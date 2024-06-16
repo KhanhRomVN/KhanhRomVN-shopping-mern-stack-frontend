@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 import { BACKEND_URI } from '~/API'
+import HeaderBar from '~/components/HeaderBar/HeaderBar'
 
 const styles = {
   appBar: {
@@ -166,41 +167,8 @@ const ProfilePage = () => {
 
   return (
     <>
-      <AppBar position="fixed" color="transparent" elevation={0}>
-        <Box sx={styles.appBar}>
-          <Box sx={styles.profileHeader}>
-            <Avatar alt="Avatar" src={user.avatar_uri} />
-            <Typography variant="h6" sx={{ ml: 2 }}>
-              {user.username}
-            </Typography>
-          </Box>
-          {!isCurrentUser && !isFriend && (
-            <Button variant="contained" onClick={handleAddFriend}>
-              Add Friend
-            </Button>
-          )}
-        </Box>
-      </AppBar>
-
+      <HeaderBar />
       <Box sx={styles.backgroundSection}>
-        {!user.background_uri && (
-          <Button
-            variant="contained"
-            color="primary"
-            component="label"
-            disabled={uploading}
-            onClick={() => document.getElementById('avatarInput').click()}
-          >
-            {uploading ? 'Uploading...' : 'Add Photo'}
-            <input
-              id="avatarInput"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              style={{ display: 'none' }}
-            />
-          </Button>
-        )}
         <Box sx={styles.profileInfo}>
           <Avatar
             alt="Avatar"

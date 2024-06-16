@@ -11,8 +11,6 @@ import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
-import HeaderBar from '~/components/HeaderBar/HeaderBar'
-import SideBar from '~/components/SideBar/SideBar'
 import { imageDB } from '~/firebase/firebaseConfig'
 import axios from 'axios' // Import Axios for API calls
 import { initialState, reducer } from './reducer'
@@ -142,118 +140,115 @@ const MyProductPage = () => {
   }))
 
   return (
-    <Box sx={{ backgroundColor: '#f3f3f3', boxSizing: 'border-box' }}>
-      <HeaderBar />
-      <SideBar />
+    <Box
+      sx={{
+        width: 'auto',
+        marginTop: (theme) => theme.other.headerBarHeight,
+        marginLeft: (theme) => theme.other.marginLeftWidth,
+        boxSizing: 'border-box',
+        padding: '8px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}
+    >
       <Box
         sx={{
-          width: 'auto',
-          marginTop: (theme) => theme.other.headerBarHeight,
-          marginLeft: (theme) => theme.other.marginLeftWidth,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           boxSizing: 'border-box',
           padding: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
+          backgroundColor: (theme) => theme.palette.backgroundColor.secondary,
         }}
       >
+        <Typography variant="h6">My Products</Typography>
+        {user?.role === 'seller' ? (
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: (theme) => theme.other.primaryColor,
+              color: (theme) => theme.palette.textColor.primary,
+            }}
+            onClick={() => dispatch({ type: 'TOGGLE_FORM' })}
+          >
+            Add new
+          </Button>
+        ) : (
+          <Button variant="contained" onClick={handleBecomeSeller}>
+            Become a seller
+          </Button>
+        )}
+      </Box>
+      {showForm && (
         <Box
           sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            boxSizing: 'border-box',
-            padding: '8px',
-            backgroundColor: '#fff',
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '20px',
+            borderRadius: '8px',
+            zIndex: '1000',
+            backgroundColor: (theme) => theme.palette.backgroundColor.primary,
           }}
         >
-          <Typography variant="h6">My Products</Typography>
-          {user?.role === 'seller' ? (
-            <Button variant="contained" onClick={() => dispatch({ type: 'TOGGLE_FORM' })}>
-              Add new
-            </Button>
-          ) : (
-            <Button variant="contained" onClick={handleBecomeSeller}>
-              Become a seller
-            </Button>
-          )}
-        </Box>
-        {showForm && (
-          <Box
-            sx={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: '#fff',
-              padding: '20px',
-              borderRadius: '8px',
-              zIndex: '10',
-            }}
-          >
-            <Typography variant="h6" style={{ color: 'black' }}>
-              Add New Product
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
-              <TextField
-                label="Name"
-                name="name"
-                value={formData.name}
+          <Typography variant="h6" style={{ color: 'black' }}>
+            Add New Product
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+            <TextField label="Name" name="name" value={formData.name} onChange={handleInputChange} variant="outlined" />
+            <TextField
+              label="Description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              variant="outlined"
+            />
+            <TextField
+              label="Price"
+              name="price"
+              value={formData.price}
+              onChange={handleInputChange}
+              variant="outlined"
+            />
+            <TextField
+              label="Inventory"
+              name="inventory"
+              value={formData.inventory}
+              onChange={handleInputChange}
+              variant="outlined"
+            />
+            <FormControl variant="outlined">
+              <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                labelId="category-label"
+                id="category"
+                name="category"
+                value={formData.category}
                 onChange={handleInputChange}
-                variant="outlined"
-              />
-              <TextField
-                label="Description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-              <TextField
-                label="Price"
-                name="price"
-                value={formData.price}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-              <TextField
-                label="Inventory"
-                name="inventory"
-                value={formData.inventory}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-              <FormControl variant="outlined">
-                <InputLabel id="category-label">Category</InputLabel>
-                <Select
-                  labelId="category-label"
-                  id="category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
-                  label="Category"
-                >
-                  <MenuItem value="fashion">Fashion</MenuItem>
-                  <MenuItem value="electronics">Electronics</MenuItem>
-                  <MenuItem value="home_appliances">Home Appliances</MenuItem>
-                  <MenuItem value="mother_and_baby">Mother & Baby</MenuItem>
-                  <MenuItem value="health_and_beauty">Health & Beauty</MenuItem>
-                </Select>
-              </FormControl>
-              <input type="file" onChange={handleImageChange} />
-              <Button variant="contained" onClick={handleSubmit}>
-                Submit
-              </Button>
-            </Box>
-            <Button variant="contained" onClick={() => dispatch({ type: 'TOGGLE_FORM' })} style={{ marginTop: '10px' }}>
-              Close
+                label="Category"
+              >
+                <MenuItem value="fashion">Fashion</MenuItem>
+                <MenuItem value="electronics">Electronics</MenuItem>
+                <MenuItem value="home_appliances">Home Appliances</MenuItem>
+                <MenuItem value="mother_and_baby">Mother & Baby</MenuItem>
+                <MenuItem value="health_and_beauty">Health & Beauty</MenuItem>
+              </Select>
+            </FormControl>
+            <input type="file" onChange={handleImageChange} />
+            <Button variant="contained" onClick={handleSubmit}>
+              Submit
             </Button>
           </Box>
-        )}
-        <Box sx={{ height: '478px', width: '100%', backgroundColor: 'white' }}>
-          <DataGrid rows={rows} columns={columns} pageSize={5} onRowClick={handleRowClick} />
+          <Button variant="contained" onClick={() => dispatch({ type: 'TOGGLE_FORM' })} style={{ marginTop: '10px' }}>
+            Close
+          </Button>
         </Box>
+      )}
+      <Box sx={{ height: '478px', width: '100%', backgroundColor: (theme) => theme.palette.backgroundColor.primary }}>
+        <DataGrid rows={rows} columns={columns} pageSize={5} onRowClick={handleRowClick} />
       </Box>
     </Box>
   )
