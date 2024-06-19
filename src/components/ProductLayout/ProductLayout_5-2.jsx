@@ -6,15 +6,16 @@ import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
+import { BACKEND_URI } from '~/API'
 
-const ProductLayout = ({ type }) => {
+const ProductLayout_5x2 = ({ type }) => {
   const [products, setProducts] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('https://shopping-mern-stack-backend.onrender.com/product/productstype', {
+        const response = await axios.post(`${BACKEND_URI}/product/productstype`, {
           type: type,
         })
 
@@ -77,4 +78,4 @@ const ProductLayout = ({ type }) => {
   )
 }
 
-export default ProductLayout
+export default ProductLayout_5x2

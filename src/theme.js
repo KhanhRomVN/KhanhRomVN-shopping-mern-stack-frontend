@@ -26,7 +26,7 @@ const theme = extendTheme({
     dark: {
       palette: {
         backgroundColor: {
-          primary: '#09090b',
+          primary: '#121212',
           secondary: '#18171c',
         },
         textColor: {

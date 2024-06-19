@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import ProductLayout from '../ProductLayout/ProductLayout'
+import ProductLayout from '../ProductLayout/ProductLayout_5-2'
 
 // Function to transform product type names
 const transformTypeName = (name) => {

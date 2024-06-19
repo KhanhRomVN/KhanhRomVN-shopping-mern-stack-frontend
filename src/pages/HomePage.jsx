@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
-import HeaderBar from '~/components/HeaderBar/HeaderBar'
 import TabUI from '~/components/TabUI/TabUI'
-import SideBar from '~/components/SideBar/SideBar'
+import Slider from '~/components/Slider/Slider'
+import { Typography } from '@mui/material'
+import ProductLayout_5x10 from '~/components/ProductLayout/ProductLayout_5-10'
 
 function HomePage() {
   const [username, setUsername] = useState(null)
@@ -25,6 +26,21 @@ function HomePage() {
     return () => clearTimeout(timeout)
   }, [navigate])
 
+  const listImage = [
+    {
+      imageUri: 'https://via.placeholder.com/800x400.png?text=Image+1',
+      link: '/',
+    },
+    {
+      imageUri: 'https://via.placeholder.com/800x400.png?text=Image+2',
+      link: '/',
+    },
+    {
+      imageUri: 'https://via.placeholder.com/800x400.png?text=Image+3',
+      link: '/',
+    },
+  ]
+
   return (
     <Box
       sx={{
@@ -33,12 +49,28 @@ function HomePage() {
         marginLeft: (theme) => theme.other.marginLeftWidth,
         boxSizing: 'border-box',
         padding: '8px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '20px',
       }}
     >
       <Box sx={{ width: '100%', height: '320px', backgroundColor: (theme) => theme.palette.backgroundColor.primary }}>
-        Đây là phần banner(nhưng tôi lười import ảnh vào)
+        <Slider listImage={listImage} />
       </Box>
-      <TabUI product_types={['Fashion', 'Electronics', 'Home Appliances', 'Mother & Baby']} />
+      <Box
+        sx={{
+          width: '100%',
+          boxSizing: 'border-box',
+          padding: '8px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+        }}
+      >
+        <Typography sx={{ fontSize: '20px' }}>Just For You</Typography>
+        <ProductLayout_5x10 />
+      </Box>
     </Box>
   )
 }

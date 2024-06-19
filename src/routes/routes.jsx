@@ -3,10 +3,10 @@ import LoginPage from '~/pages/LoginPage'
 import RegisterPage from '~/pages/RegisterPage'
 import ProfilePage from '~/pages/ProfilePage'
 import SettingPage from '~/pages/SettingPage'
-import ChatPage from '~/pages/ChatPage'
+import ChatPage from '~/pages/ChatPage/ChatPage'
 import MyProductPage from '~/pages/MyProductPage/MyProductPage'
-import ProductPage from '~/pages/ProductPage'
-import CartPage from '~/pages/CartPage'
+import ProductPage from '~/pages/ProductPage/ProductPage'
+import CartPage from '~/pages/CartPage/CartPage'
 import DefaultLayout from '~/layout/defaultLayout'
 
 const publicRoutes = [
