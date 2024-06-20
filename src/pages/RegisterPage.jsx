@@ -15,14 +15,7 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const userData = {
-      username,
-      email,
-      password,
-      name,
-      age,
-      gender,
-    }
+    const userData = { username, email, password, name, age, gender }
     try {
       const response = await axios.post(`${BACKEND_URI}/auth/register`, userData)
       console.log('Registration successful:', response.data)
@@ -34,10 +27,7 @@ const RegisterPage = () => {
 
   return (
     <Box sx={{ width: '100vw', height: '100vh', display: 'flex' }}>
-      {/* Left Box for Image (Replace with your image component or styling) */}
       <Box sx={{ width: '50%', height: '100%', backgroundColor: 'red' }}></Box>
-
-      {/* Right Box for Registration Form */}
       <Box sx={{ width: '50%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Container maxWidth="sm">
           <Typography variant="h4" gutterBottom align="center">
@@ -96,17 +86,34 @@ const RegisterPage = () => {
               <Grid item xs={12}>
                 <Select
                   fullWidth
-                  label="Gender"
-                  variant="outlined"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
+                  displayEmpty
+                  renderValue={(selected) => {
+                    if (selected.length === 0) {
+                      return <em>Gender</em>
+                    }
+                    return selected
+                  }}
                 >
+                  <MenuItem value="">
+                    <em>Gender</em>
+                  </MenuItem>
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
                 </Select>
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" fullWidth variant="contained" color="primary">
+                <Button
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    borderRadius: '20px',
+                    backgroundColor: (theme) => theme.palette.backgroundColor.primary,
+                  }}
+                >
                   Register
                 </Button>
               </Grid>

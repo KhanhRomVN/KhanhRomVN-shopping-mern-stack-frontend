@@ -8,16 +8,13 @@ import { Typography } from '@mui/material'
 import ProductLayout_5x10 from '~/components/ProductLayout/ProductLayout_5-10'
 
 function HomePage() {
-  const [username, setUsername] = useState(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const user = JSON.parse(localStorage.getItem('currentUser'))
-      if (user && user.username) {
-        setUsername(user.username)
-      } else {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+      if (!currentUser) {
         navigate('/login')
       }
       setLoading(false)

@@ -1,3 +1,4 @@
+// reducer.js
 export const initialState = {
   user: null,
   showForm: false,

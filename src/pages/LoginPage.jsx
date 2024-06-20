@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Grid, TextField, Button, Box, Typography, Alert } from '@mui/material'
 import axios from 'axios'
-import { loginAPI } from '~/API'
-const loginBG = '/images/public-img4.jpg'
-
+import { BACKEND_URI } from '~/API'
+import { GoogleLogin } from '@react-oauth/google'
 import ModeSelect from '~/components/ModeSelect'
+import { jwtDecode } from 'jwt-decode'
+
+const loginBG = '/images/public-img4.jpg'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
@@ -16,10 +18,7 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(loginAPI, {
-        email,
-        password,
-      })
+      const response = await axios.post(`${BACKEND_URI}/auth/login`, { email, password })
       const { accessToken, refreshToken, currentUser } = response.data
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('refreshToken', refreshToken)
@@ -27,12 +26,63 @@ function LoginPage() {
 
       setSuccess('Login successful!')
       setError('')
-
       navigate('/')
     } catch (err) {
       setError('Login failed. Please check your email and password.')
       setSuccess('')
     }
+  }
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential)
+      const { email, name, picture, sub } = decoded
+      const userData = {
+        email,
+        name,
+        picture,
+        sub,
+      }
+      const response = await axios.post(`${BACKEND_URI}/auth/login/google`, userData)
+      const { accessToken, refreshToken, currentUser } = response.data
+      localStorage.setItem('accessToken', accessToken)
+      localStorage.setItem('refreshToken', refreshToken)
+      localStorage.setItem('currentUser', JSON.stringify(currentUser))
+
+      let localStorageCurrentUser = JSON.parse(localStorage.getItem('currentUser'))
+      if (!localStorageCurrentUser.username) {
+        const username = prompt('Please enter your username:')
+        if (username) {
+          const updateResponse = await axios.post(
+            `${BACKEND_URI}/user/update-username`,
+            { username },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                accessToken,
+              },
+            },
+          )
+          localStorageCurrentUser.username = updateResponse.data.username
+          localStorage.setItem('currentUser', JSON.stringify(localStorageCurrentUser))
+        } else {
+          setError('Username is required.')
+          return
+        }
+      }
+
+      setSuccess('Login successful!')
+      setError('')
+      navigate('/')
+    } catch (err) {
+      setError('Google login failed.')
+      setSuccess('')
+    }
+  }
+
+  const handleGoogleLoginError = () => {
+    setError('Google login failed.')
+    setSuccess('')
   }
 
   return (
@@ -45,14 +95,7 @@ function LoginPage() {
           <img
             src={loginBG}
             alt="Login Background"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-            }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0 }}
           />
         </Grid>
         <Grid
@@ -62,20 +105,10 @@ function LoginPage() {
           container
           alignItems="center"
           justifyContent="center"
-          style={{
-            position: 'relative',
-          }}
+          style={{ position: 'relative' }}
         >
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" width="80%">
-            <Typography
-              variant="h6"
-              gutterBottom
-              style={{
-                position: 'absolute',
-                top: '15px',
-                left: '15px',
-              }}
-            >
+            <Typography variant="h6" gutterBottom style={{ position: 'absolute', top: '15px', left: '15px' }}>
               KR Shop
             </Typography>
             <Typography variant="h5" gutterBottom>
@@ -105,7 +138,7 @@ function LoginPage() {
             <Button
               variant="contained"
               sx={{
-                borderRadius: '20px', // Góc cong
+                borderRadius: '20px',
                 backgroundColor: (theme) => theme.palette.backgroundColor.primary,
               }}
               onClick={handleLogin}
@@ -113,18 +146,21 @@ function LoginPage() {
             >
               Login
             </Button>
+            <Box mt={2} width="100%">
+              <GoogleLogin
+                onSuccess={handleGoogleLoginSuccess}
+                onError={handleGoogleLoginError}
+                size="large"
+                width="100%"
+              />
+            </Box>
             <Box mt={2}>
               <Typography variant="body1">
                 Dont have an account?{' '}
                 <Link
                   to="/register"
-                  style={{
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                  }}
-                  sx={{
-                    color: (theme) => theme.palette.backgroundColor.primary,
-                  }}
+                  style={{ textDecoration: 'none', cursor: 'pointer' }}
+                  sx={{ color: (theme) => theme.palette.backgroundColor.primary }}
                 >
                   Register
                 </Link>

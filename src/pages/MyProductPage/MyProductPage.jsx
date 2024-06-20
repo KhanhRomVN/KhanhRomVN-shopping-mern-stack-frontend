@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
@@ -9,12 +9,9 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import { DataGrid } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { v4 as uuidv4 } from 'uuid'
-import { imageDB } from '~/firebase/firebaseConfig'
-import axios from 'axios' // Import Axios for API calls
 import { initialState, reducer } from './reducer'
-import { BACKEND_URI } from '~/API'
+import { getProducts, addProduct, updateRole } from '~/API/index'
+import { uploadImage } from '~/service/imageUpload'
 
 const MyProductPage = () => {
   const navigate = useNavigate()
@@ -31,16 +28,8 @@ const MyProductPage = () => {
     const loadProducts = async () => {
       const accessToken = localStorage.getItem('accessToken')
       try {
-        const response = await axios.post(
-          `${BACKEND_URI}/product/get-products`,
-          {},
-          {
-            headers: {
-              accessToken: accessToken,
-            },
-          },
-        )
-        dispatch({ type: 'SET_PRODUCTS', payload: response.data.products })
+        const products = await getProducts(accessToken)
+        dispatch({ type: 'SET_PRODUCTS', payload: products })
       } catch (error) {
         console.error('Error fetching products:', error.message)
       }
@@ -63,9 +52,7 @@ const MyProductPage = () => {
       let imageURL = ''
 
       if (formData.image) {
-        const imageRef = ref(imageDB, `images/${uuidv4()}`) // Generate unique image filename
-        const snapshot = await uploadBytes(imageRef, formData.image)
-        imageURL = await getDownloadURL(snapshot.ref)
+        imageURL = await uploadImage(formData.image)
       }
 
       const productData = {
@@ -77,12 +64,7 @@ const MyProductPage = () => {
         image: imageURL,
       }
 
-      const response = await axios.post(`${BACKEND_URI}/product/add-product`, productData, {
-        headers: {
-          accessToken: accessToken,
-          'Content-Type': 'application/json',
-        },
-      })
+      const response = await addProduct(accessToken, productData)
 
       if (response.status === 201) {
         dispatch({ type: 'SET_PRODUCTS', payload: [...products, productData] })
@@ -98,15 +80,7 @@ const MyProductPage = () => {
   const handleBecomeSeller = async () => {
     const accessToken = localStorage.getItem('accessToken')
     try {
-      const response = await axios.put(
-        `${BACKEND_URI}/user/update-role`,
-        {},
-        {
-          headers: {
-            accessToken: accessToken,
-          },
-        },
-      )
+      const response = await updateRole(accessToken)
 
       if (response.status === 200) {
         const updatedUser = { ...user, role: 'seller' }
