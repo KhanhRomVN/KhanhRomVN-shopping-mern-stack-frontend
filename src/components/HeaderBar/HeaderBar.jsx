@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
 import Box from '@mui/material/Box'
+import { Typography } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
 import Menu from '@mui/material/Menu'
@@ -97,13 +98,9 @@ const HeaderBar = () => {
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ height: '48%' }}>
-          <img
-            src="https://i.ibb.co/qYVGwzH/logo-light.png"
-            alt="logo"
-            style={{ objectFit: 'cover', height: '100%' }}
-          />
-          {/* <img src="https://i.ibb.co/R4Ccckw/logo-dark.png" alt="logo" style={{ objectFit: 'cover', height: '100%' }} /> */}
+        <Box sx={{ height: '48%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src="https://i.postimg.cc/jd0dTYF1/logo.png" alt="logo" style={{ objectFit: 'cover', height: '100%' }} />
+          <Typography sx={{ fontSize: '20px' }}>SaleSo</Typography>
         </Box>
         <Box
           sx={{

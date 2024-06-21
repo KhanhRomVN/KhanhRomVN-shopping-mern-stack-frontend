@@ -1,27 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
+import { useEffect } from 'react'
+
 import { useNavigate } from 'react-router-dom'
-import TabUI from '~/components/TabUI/TabUI'
 import Slider from '~/components/Slider/Slider'
 import { Typography } from '@mui/material'
+import Box from '@mui/material/Box'
 import ProductLayout_5x10 from '~/components/ProductLayout/ProductLayout_5-10'
 
 function HomePage() {
-  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
-      if (!currentUser) {
-        navigate('/login')
-      }
-      setLoading(false)
-    }, 1500)
-
-    return () => clearTimeout(timeout)
-  }, [navigate])
 
   const listImage = [
     {
@@ -37,6 +23,13 @@ function HomePage() {
       link: '/',
     },
   ]
+
+  useEffect(() => {
+    const currentUser = localStorage.getItem('currentUser')
+    if (!currentUser) {
+      navigate('/login')
+    }
+  }, [navigate])
 
   return (
     <Box

@@ -2,7 +2,7 @@ import HomePage from '~/pages/HomePage'
 import LoginPage from '~/pages/LoginPage'
 import RegisterPage from '~/pages/RegisterPage'
 import ProfilePage from '~/pages/ProfilePage'
-import SettingPage from '~/pages/SettingPage'
+import ProfileSettingPage from '~/pages/SettingPage/ProfileSettingPage'
 import ChatPage from '~/pages/ChatPage/ChatPage'
 import MyProductPage from '~/pages/MyProductPage/MyProductPage'
 import ProductPage from '~/pages/ProductPage/ProductPage'
@@ -36,10 +36,10 @@ const publicRoutes = [
     element: <ProfilePage />,
   },
   {
-    path: '/setting',
+    path: '/setting/profile',
     element: (
       <DefaultLayout>
-        <SettingPage />
+        <ProfileSettingPage />
       </DefaultLayout>
     ),
   },
