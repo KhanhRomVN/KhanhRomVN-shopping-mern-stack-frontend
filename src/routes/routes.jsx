@@ -8,6 +8,7 @@ import MyProductPage from '~/pages/MyProductPage/MyProductPage'
 import ProductPage from '~/pages/ProductPage/ProductPage'
 import CartPage from '~/pages/CartPage/CartPage'
 import DefaultLayout from '~/layout/defaultLayout'
+import ConfirmationPage from '~/pages/ConfirmationPage'
 
 const publicRoutes = [
   {
@@ -25,6 +26,10 @@ const publicRoutes = [
   {
     path: '/register',
     element: <RegisterPage />,
+  },
+  {
+    path: '/confirmation',
+    element: <ConfirmationPage />,
   },
   {
     path: '/profile/:username',

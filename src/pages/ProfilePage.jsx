@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { AppBar, Typography, Box, Avatar, Tabs, Tab, Button } from '@mui/material'
+import { useState, useEffect, useCallback } from 'react'
+import { Typography, Box, Avatar, Tabs, Tab, Button } from '@mui/material'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'

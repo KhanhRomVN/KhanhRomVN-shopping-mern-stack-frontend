@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Grid, TextField, Button, Typography, Box, Select, MenuItem } from '@mui/material'
+import { Container, Grid, TextField, Button, Typography, Box, Select, MenuItem, Alert } from '@mui/material'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { BACKEND_URI } from '~/API'
@@ -12,16 +12,23 @@ const RegisterPage = () => {
   const [name, setName] = useState('')
   const [age, setAge] = useState('')
   const [gender, setGender] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     const userData = { username, email, password, name, age, gender }
     try {
       const response = await axios.post(`${BACKEND_URI}/auth/register`, userData)
-      console.log('Registration successful:', response.data)
-      navigate('/login')
+      console.log('Registration successful:', response.data.message)
+      console.log(response.data.emailToken)
+      localStorage.setItem('emailToken', response.data.emailToken)
+      setEmailSent(true)
+      setError('')
     } catch (error) {
       console.error('Error registering user:', error)
+      setEmailSent(false)
+      setError('Error registering user')
     }
   }
 
@@ -33,6 +40,12 @@ const RegisterPage = () => {
           <Typography variant="h4" gutterBottom align="center">
             Register
           </Typography>
+          {emailSent && (
+            <Alert severity="success">
+              A confirmation email has been sent to your email address. Please check your inbox to verify your account.
+            </Alert>
+          )}
+          {error && <Alert severity="error">{error}</Alert>}
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
