@@ -1,14 +1,16 @@
 import HomePage from '~/pages/HomePage'
 import LoginPage from '~/pages/LoginPage'
-import RegisterPage from '~/pages/RegisterPage'
+import RegisterPage from '~/pages/RegisterPage/RegisterPage'
 import ProfilePage from '~/pages/ProfilePage'
-import ProfileSettingPage from '~/pages/SettingPage/ProfileSettingPage'
+import PersonalInfoSettingPage from '~/pages/SettingPage/PersonalInfoSettingPage'
 import ChatPage from '~/pages/ChatPage/ChatPage'
 import MyProductPage from '~/pages/MyProductPage/MyProductPage'
 import ProductPage from '~/pages/ProductPage/ProductPage'
 import CartPage from '~/pages/CartPage/CartPage'
 import DefaultLayout from '~/layout/defaultLayout'
-import ConfirmationPage from '~/pages/ConfirmationPage'
+import EmailPage from '~/pages/RegisterPage/EmailPage'
+import SettingLayout from '~/layout/settingLayout'
+import ProfileSettingPage from '~/pages/SettingPage/ProfileSettingPage'
 
 const publicRoutes = [
   {
@@ -20,26 +22,38 @@ const publicRoutes = [
     ),
   },
   {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/register',
+    path: '/register/:email',
     element: <RegisterPage />,
   },
   {
-    path: '/confirmation',
-    element: <ConfirmationPage />,
+    path: '/register/email',
+    element: <EmailPage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
   },
   {
     path: '/profile/:username',
     element: <ProfilePage />,
   },
   {
+    path: '/setting/personal-info',
+    element: (
+      <DefaultLayout>
+        <SettingLayout>
+          <PersonalInfoSettingPage />
+        </SettingLayout>
+      </DefaultLayout>
+    ),
+  },
+  {
     path: '/setting/profile',
     element: (
       <DefaultLayout>
-        <ProfileSettingPage />
+        <SettingLayout>
+          <ProfileSettingPage />
+        </SettingLayout>
       </DefaultLayout>
     ),
   },

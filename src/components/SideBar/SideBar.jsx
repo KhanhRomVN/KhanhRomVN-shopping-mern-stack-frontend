@@ -32,7 +32,7 @@ const menuItems = [
   {
     title: 'Others',
     items: [
-      { text: 'Setting', icon: <SettingsOutlinedIcon fontSize="small" />, path: '/setting/profile' },
+      { text: 'Setting', icon: <SettingsOutlinedIcon fontSize="small" />, path: '/setting/personal-info' },
       { text: 'Security', icon: <GppGoodOutlinedIcon fontSize="small" />, path: '/security' },
       { text: 'Help', icon: <HelpOutlineOutlinedIcon fontSize="small" />, path: '/help' },
     ],

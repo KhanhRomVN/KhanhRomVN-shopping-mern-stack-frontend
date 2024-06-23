@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-
 import { useNavigate } from 'react-router-dom'
 import Slider from '~/components/Slider/Slider'
 import { Typography } from '@mui/material'
