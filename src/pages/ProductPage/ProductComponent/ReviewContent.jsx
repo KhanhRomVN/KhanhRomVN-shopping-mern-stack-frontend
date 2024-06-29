@@ -32,6 +32,7 @@ const ReviewContent = ({ prodId }) => {
         },
         {
           headers: {
+            'Content-Type': 'application/json',
             accessToken: accessToken,
           },
         },

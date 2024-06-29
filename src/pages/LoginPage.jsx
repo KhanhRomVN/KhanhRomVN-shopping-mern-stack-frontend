@@ -6,35 +6,35 @@ import { useNavigate } from 'react-router-dom'
 import { BACKEND_URI } from '~/API'
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
+import { useSnackbar } from 'notistack'
 
 const gradientBackgroundUri = 'https://i.ibb.co/HFMBf1q/Orange-And-White-Gradient-Background.jpg'
 
 const LoginPage = () => {
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${BACKEND_URI}/auth/login`, { email, password })
       const { currentUser, accessToken, refreshToken } = response.data
 
-      // Save user data to localStorage
       localStorage.setItem('currentUser', JSON.stringify(currentUser))
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('refreshToken', refreshToken)
 
-      // Navigate to home page
+      enqueueSnackbar('Login successful!', { variant: 'success' })
       navigate('/')
     } catch (error) {
       console.error('Error logging in:', error)
+      enqueueSnackbar('Login failed. Please check your credentials.', { variant: 'error' })
     }
   }
 
   const navigateToRegister = () => {
-    navigate('/register/email')
+    navigate('/register')
   }
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
@@ -54,39 +54,21 @@ const LoginPage = () => {
       localStorage.setItem('currentUser', JSON.stringify(currentUser))
 
       let localStorageCurrentUser = JSON.parse(localStorage.getItem('currentUser'))
+
       if (!localStorageCurrentUser.username) {
-        const username = prompt('Please enter your username:')
-        if (username) {
-          const updateResponse = await axios.post(
-            `${BACKEND_URI}/user/update-username`,
-            { username },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                accessToken,
-              },
-            },
-          )
-          localStorageCurrentUser.username = updateResponse.data.username
-          localStorage.setItem('currentUser', JSON.stringify(localStorageCurrentUser))
-        } else {
-          setError('Username is required.')
-          return
-        }
+        navigate(`/register/username/${sub}`)
+        return
       }
 
-      setSuccess('Login successful!')
-      setError('')
+      enqueueSnackbar('Login successful!', { variant: 'success' })
       navigate('/')
     } catch (err) {
-      setError('Google login failed.')
-      setSuccess('')
+      enqueueSnackbar('Google login failed.', { variant: 'error' })
     }
   }
 
   const handleGoogleLoginError = () => {
-    setError('Google login failed.')
-    setSuccess('')
+    enqueueSnackbar('Google login failed.', { variant: 'error' })
   }
 
   return (

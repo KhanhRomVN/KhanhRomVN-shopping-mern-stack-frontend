@@ -1,16 +1,28 @@
+//* Public Page
 import HomePage from '~/pages/HomePage'
+
+//* Auth Page
+import RegisterPage from '~/pages/RegisterPage'
+import UsernameGooglePage from '~/pages/UsernameGooglePage'
 import LoginPage from '~/pages/LoginPage'
-import RegisterPage from '~/pages/RegisterPage/RegisterPage'
-import ProfilePage from '~/pages/ProfilePage'
-import PersonalInfoSettingPage from '~/pages/SettingPage/PersonalInfoSettingPage'
-import ChatPage from '~/pages/ChatPage/ChatPage'
+
+//* Shopping Page
 import MyProductPage from '~/pages/MyProductPage/MyProductPage'
 import ProductPage from '~/pages/ProductPage/ProductPage'
 import CartPage from '~/pages/CartPage/CartPage'
+
+//* Other Page
+import ProfilePage from '~/pages/ProfilePage'
+import ChatPage from '~/pages/ChatPage/ChatPage'
+import FriendPage from '~/pages/FriendPage/FriendPage'
+
+//* Setting Page
+import AccountSecurityPage from '~/pages/SettingPage/AccountSecurityPage'
+import PersonalInfoSettingPage from '~/pages/SettingPage/AccountSecurityPage'
+
+//* Layout Component
 import DefaultLayout from '~/layout/defaultLayout'
-import EmailPage from '~/pages/RegisterPage/EmailPage'
 import SettingLayout from '~/layout/settingLayout'
-import ProfileSettingPage from '~/pages/SettingPage/ProfileSettingPage'
 
 const publicRoutes = [
   {
@@ -22,37 +34,39 @@ const publicRoutes = [
     ),
   },
   {
-    path: '/register/:email',
+    path: '/register',
     element: <RegisterPage />,
-  },
-  {
-    path: '/register/email',
-    element: <EmailPage />,
   },
   {
     path: '/login',
     element: <LoginPage />,
   },
   {
-    path: '/profile/:username',
-    element: <ProfilePage />,
+    path: '/register/username/:sub',
+    element: <UsernameGooglePage />,
   },
   {
-    path: '/setting/personal-info',
+    path: '/profile/:username',
     element: (
       <DefaultLayout>
-        <SettingLayout>
-          <PersonalInfoSettingPage />
-        </SettingLayout>
+        <ProfilePage />
       </DefaultLayout>
     ),
   },
   {
-    path: '/setting/profile',
+    path: '/friend',
+    element: (
+      <DefaultLayout>
+        <FriendPage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: '/setting/account-security',
     element: (
       <DefaultLayout>
         <SettingLayout>
-          <ProfileSettingPage />
+          <AccountSecurityPage />
         </SettingLayout>
       </DefaultLayout>
     ),

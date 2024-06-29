@@ -1,54 +1,54 @@
 import React, { useState } from 'react'
-import { Button, Box, Typography, Snackbar, Alert } from '@mui/material'
+import { Button, Box, Typography } from '@mui/material'
 import CustomInput from '~/components/InputBar/CustomInput'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { BACKEND_URI } from '~/API'
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
+import { useSnackbar } from 'notistack'
 
 const gradientBackgroundUri = 'https://i.ibb.co/HFMBf1q/Orange-And-White-Gradient-Background.jpg'
 
 const EmailPage = () => {
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [showOTPInput, setShowOTPInput] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [showSnackbar, setShowSnackbar] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   const handleEmailSubmit = async () => {
     try {
-      const response = await axios.post(`${BACKEND_URI}/auth/email-verify`, { email })
-      console.log(response.data)
+      await axios.post(`${BACKEND_URI}/auth/email-verify`, { email })
       setShowOTPInput(true)
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setErrorMessage('Email này đã được đăng ký')
-        setShowSnackbar(true)
+        enqueueSnackbar('Email này đã được đăng ký', { variant: 'error' })
         setTimeout(() => {
-          setShowSnackbar(false)
           navigate('/login')
         }, 3000)
       } else {
         console.error('Error sending email verification:', error)
+        enqueueSnackbar('Error sending email verification', { variant: 'error' })
       }
     }
   }
 
   const handleOTPSubmit = async () => {
     try {
-      const response = await axios.post(`${BACKEND_URI}/auth/email-otp-verify`, { email, otp })
+      const response = await axios.post(`${BACKEND_URI}/auth/register-otp`, { email, otp, username, password })
       console.log(response.data)
-      navigate(`/register/${email}`)
+      enqueueSnackbar('OTP verified successfully!', { variant: 'success' })
+      navigate('/login')
     } catch (error) {
       console.error('Error verifying OTP:', error)
+      enqueueSnackbar('Error verifying OTP', { variant: 'error' })
     }
   }
 
-  const navigateToLogin = async () => {
+  const navigateToLogin = () => {
     navigate('/login')
   }
 
@@ -85,23 +85,20 @@ const EmailPage = () => {
           localStorageCurrentUser.username = updateResponse.data.username
           localStorage.setItem('currentUser', JSON.stringify(localStorageCurrentUser))
         } else {
-          setError('Username is required.')
+          enqueueSnackbar('Username is required.', { variant: 'error' })
           return
         }
       }
 
-      setSuccess('Login successful!')
-      setError('')
+      enqueueSnackbar('Login successful!', { variant: 'success' })
       navigate('/')
     } catch (err) {
-      setError('Google login failed.')
-      setSuccess('')
+      enqueueSnackbar('Google login failed.', { variant: 'error' })
     }
   }
 
   const handleGoogleLoginError = () => {
-    setError('Google login failed.')
-    setSuccess('')
+    enqueueSnackbar('Google login failed.', { variant: 'error' })
   }
 
   return (
@@ -145,7 +142,16 @@ const EmailPage = () => {
         >
           <CustomInput label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           {showOTPInput && (
-            <CustomInput label="OTP" type="password" value={otp} onChange={(e) => setOtp(e.target.value)} />
+            <>
+              <CustomInput label="OTP" type="password" value={otp} onChange={(e) => setOtp(e.target.value)} />
+              <CustomInput label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <CustomInput
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </>
           )}
           <Button
             variant="contained"
@@ -169,11 +175,6 @@ const EmailPage = () => {
           Login here
         </Typography>
       </Box>
-      <Snackbar open={showSnackbar} autoHideDuration={3000}>
-        <Alert severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   )
 }

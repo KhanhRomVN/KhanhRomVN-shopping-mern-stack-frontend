@@ -18,39 +18,21 @@ import {
 
 const sections = [
   {
-    title: 'Account Management',
+    title: 'Account',
     items: [
-      { text: 'Personal Information', icon: <AccountCircleIcon fontSize="small" />, path: '/setting/personal-info' },
-      { text: 'Security', icon: <SecurityIcon fontSize="small" />, path: '/setting/security' },
+      { text: 'Account&Security', icon: <AccountCircleIcon fontSize="small" />, path: '/setting/account-security' },
+      { text: 'Address', icon: <SecurityIcon fontSize="small" />, path: '/setting/address' },
+      { text: 'Bank/Card', icon: <SecurityIcon fontSize="small" />, path: '/setting/bankcard' },
     ],
   },
   {
-    title: 'Buying and Selling Settings',
+    title: 'Settings',
     items: [
-      { text: 'My Orders', icon: <ShoppingCartIcon fontSize="small" />, path: '/setting/my-orders' },
-      { text: 'Payment and Shipping', icon: <PaymentIcon fontSize="small" />, path: '/setting/payment-shipping' },
-      { text: 'Favorite List', icon: <FavoriteIcon fontSize="small" />, path: '/setting/favorite-list' },
-    ],
-  },
-  {
-    title: 'Store Management',
-    items: [
-      { text: 'My Products', icon: <StoreIcon fontSize="small" />, path: '/setting/my-products' },
-      { text: 'Store Orders', icon: <ShoppingCartIcon fontSize="small" />, path: '/setting/store-orders' },
-    ],
-  },
-  {
-    title: 'Social Network Settings',
-    items: [
-      { text: 'Profile', icon: <PersonIcon fontSize="small" />, path: '/setting/profile' },
-      { text: 'Posts and Status', icon: <PostAddIcon fontSize="small" />, path: '/setting/posts-status' },
-    ],
-  },
-  {
-    title: 'Notifications and Messages',
-    items: [
-      { text: 'Notifications', icon: <NotificationsIcon fontSize="small" />, path: '/setting/notifications' },
-      { text: 'Messages', icon: <MailIcon fontSize="small" />, path: '/setting/messages' },
+      { text: 'Chat setting', icon: <ShoppingCartIcon fontSize="small" />, path: '/setting/chat' },
+      { text: 'Notification settings', icon: <PaymentIcon fontSize="small" />, path: '/setting/notification' },
+      { text: 'Personal setting', icon: <FavoriteIcon fontSize="small" />, path: '/setting/personal' },
+      { text: 'Blocklist', icon: <FavoriteIcon fontSize="small" />, path: '/setting/blocklist' },
+      { text: 'Language', icon: <FavoriteIcon fontSize="small" />, path: '/setting/language' },
     ],
   },
   {

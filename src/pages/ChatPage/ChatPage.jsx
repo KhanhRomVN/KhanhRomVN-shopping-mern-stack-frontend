@@ -27,12 +27,10 @@ const ChatPage = () => {
   useEffect(() => {
     const listFriend = async () => {
       try {
-        const response = await axios.post(
-          `${BACKEND_URI}/user/list-friend`,
-          { receiver_id: user_id },
-          { headers: { accessToken: accessToken } },
-        )
-        setFriendList(response.data.friendDataList)
+        const response = await axios.get(`${BACKEND_URI}/user/get-list-friend`, {
+          headers: { 'Content-Type': 'application/json', accessToken: accessToken },
+        })
+        setFriendList(response.data.friends)
       } catch (error) {
         console.error('Error fetching friend list:', error)
       }

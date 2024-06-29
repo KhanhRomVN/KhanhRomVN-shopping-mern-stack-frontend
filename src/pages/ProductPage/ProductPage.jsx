@@ -7,6 +7,7 @@ import { BACKEND_URI } from '~/API'
 import FixedBar from './ProductComponent/FixedBar'
 import ProductTabs from './ProductComponent/ProductTabs'
 import ProductSellerPage from './ProductSellerPage'
+import { useSnackbar } from 'notistack'
 
 const ProductPage = () => {
   const { prod_id } = useParams()
@@ -14,6 +15,7 @@ const ProductPage = () => {
   const [tabIndex, setTabIndex] = useState('description')
   const [productUserId, setProductUserId] = useState('')
   const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -26,6 +28,7 @@ const ProductPage = () => {
         }
       } catch (error) {
         console.error('Error fetching product:', error)
+        enqueueSnackbar('Error fetching product data', { variant: 'error' })
       }
     }
     fetchProduct()
@@ -44,10 +47,10 @@ const ProductPage = () => {
           },
         },
       )
-      alert('Product added to cart successfully!')
+      enqueueSnackbar('Product added to cart successfully!', { variant: 'success' })
     } catch (error) {
       console.error('Error adding product to cart:', error)
-      alert('Failed to add product to cart.')
+      enqueueSnackbar('Failed to add product to cart', { variant: 'error' })
     }
   }
 
@@ -59,8 +62,6 @@ const ProductPage = () => {
     <Box
       sx={{
         width: 'auto',
-        marginTop: (theme) => theme.other.headerBarHeight,
-        marginLeft: (theme) => theme.other.marginLeftWidth,
         boxSizing: 'border-box',
         padding: '8px',
         display: 'flex',

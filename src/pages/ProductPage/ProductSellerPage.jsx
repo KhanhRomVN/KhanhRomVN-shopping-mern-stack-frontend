@@ -5,8 +5,11 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import axios from 'axios'
 import { BACKEND_URI } from '~/API'
+import { useSnackbar } from 'notistack'
 
 const ProductSellerPage = ({ product }) => {
+  const { enqueueSnackbar } = useSnackbar()
+
   const [updatedProduct, setUpdatedProduct] = useState({
     name: product.name,
     price: product.price,
@@ -27,10 +30,10 @@ const ProductSellerPage = ({ product }) => {
     e.preventDefault()
     try {
       await axios.post(`${BACKEND_URI}/product/update-product`, updatedProduct)
-      alert('Product updated successfully!')
+      enqueueSnackbar('Product updated successfully!', { variant: 'success' })
     } catch (error) {
       console.error('Error updating product:', error)
-      alert('Failed to update product.')
+      enqueueSnackbar('Failed to update product.', { variant: 'error' })
     }
   }
 

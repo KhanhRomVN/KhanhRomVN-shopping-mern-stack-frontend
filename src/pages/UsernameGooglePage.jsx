@@ -5,23 +5,36 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { BACKEND_URI } from '~/API'
 import { useParams } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
 
 const gradientBackgroundUri = 'https://i.ibb.co/HFMBf1q/Orange-And-White-Gradient-Background.jpg'
 
-const RegisterPage = () => {
-  const { email } = useParams()
+const UsernameGooglePage = () => {
+  const { sub } = useParams()
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post(`${BACKEND_URI}/auth/register`, { email, username, password })
+      const accessToken = localStorage.getItem('accessToken')
+      const response = await axios.post(
+        `${BACKEND_URI}/user/update-username`,
+        { username },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            accessToken: accessToken,
+          },
+        },
+      )
       console.log(response.data)
-      navigate('/login')
+      enqueueSnackbar('Username updated successfully', { variant: 'success' })
+      navigate('/')
     } catch (error) {
       console.error('Error registering user:', error)
+      enqueueSnackbar(`Error updating username: ${error.message}`, { variant: 'error' })
     }
   }
 
@@ -54,7 +67,7 @@ const RegisterPage = () => {
             />
           </Box>
           <Typography sx={{ fontSize: '22px' }}>Welcome to Saleso!</Typography>
-          <Typography sx={{ fontSize: '13px' }}>Please enter username and password to access the website</Typography>
+          <Typography sx={{ fontSize: '13px' }}>Please enter username to access the website</Typography>
         </Box>
         <Box
           sx={{
@@ -65,12 +78,6 @@ const RegisterPage = () => {
           }}
         >
           <CustomInput label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <CustomInput
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
           <Button
             variant="contained"
             onClick={handleRegister}
@@ -92,4 +99,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default UsernameGooglePage

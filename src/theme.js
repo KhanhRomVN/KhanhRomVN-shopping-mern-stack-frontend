@@ -3,7 +3,8 @@ import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 const theme = extendTheme({
   other: {
     headerBarHeight: '61px',
-    marginLeftWidth: '196px',
+    maxSideBarWidth: '196px',
+    minSideBarWidth: '50px', // Smaller width for collapsed state
     primaryColor: '#e15a15',
   },
   colorSchemes: {

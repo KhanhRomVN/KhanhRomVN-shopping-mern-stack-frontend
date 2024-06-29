@@ -6,11 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import { BACKEND_URI } from '~/API'
 import CartInventory from './CartInventory'
 import OrderSummary from './OrderSummary'
+import { useSnackbar } from 'notistack'
 
 const CartPage = () => {
   const [products, setProducts] = useState([])
   const [selectedProducts, setSelectedProducts] = useState([])
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -21,6 +23,7 @@ const CartPage = () => {
           {},
           {
             headers: {
+              'Content-Type': 'application/json',
               accessToken: accessToken,
             },
           },
@@ -28,6 +31,7 @@ const CartPage = () => {
         setProducts(response.data.productList)
       } catch (error) {
         console.error('Error fetching cart data', error)
+        enqueueSnackbar('Error fetching cart data', { variant: 'error' })
       }
     }
 
@@ -49,8 +53,10 @@ const CartPage = () => {
       await axios.delete(`${BACKEND_URI}/cart/delete-product/${productId}`)
       setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId))
       setSelectedProducts((prevSelectedProducts) => prevSelectedProducts.filter((product) => product._id !== productId))
+      enqueueSnackbar('Product deleted successfully', { variant: 'success' })
     } catch (error) {
       console.error('Error deleting product', error)
+      enqueueSnackbar('Error deleting product', { variant: 'error' })
     }
   }
 
@@ -61,15 +67,16 @@ const CartPage = () => {
   const totalItems = selectedProducts.length
   const totalPrice = selectedProducts.reduce((acc, product) => acc + product.price, 0)
 
-  const handleCheckout = async () => {}
+  const handleCheckout = async () => {
+    // Implement checkout logic here
+    enqueueSnackbar('Checkout functionality not implemented yet', { variant: 'info' })
+  }
 
   return (
     <Box
       sx={{
         width: 'auto',
         height: '100%',
-        marginTop: (theme) => theme.other.headerBarHeight,
-        marginLeft: (theme) => theme.other.marginLeftWidth,
         boxSizing: 'border-box',
         padding: '8px',
         display: 'flex',

@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Slider from '~/components/Slider/Slider'
 import { Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import ProductLayout_5x10 from '~/components/ProductLayout/ProductLayout_5-10'
+import { useSnackbar } from 'notistack'
 
 function HomePage() {
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
 
   const listImage = [
     {
@@ -27,15 +29,14 @@ function HomePage() {
     const currentUser = localStorage.getItem('currentUser')
     if (!currentUser) {
       navigate('/login')
+      enqueueSnackbar('Please log in to access the homepage', { variant: 'info' })
     }
-  }, [navigate])
+  }, [navigate, enqueueSnackbar])
 
   return (
     <Box
       sx={{
         width: 'auto',
-        marginTop: (theme) => theme.other.headerBarHeight,
-        marginLeft: (theme) => theme.other.marginLeftWidth,
         boxSizing: 'border-box',
         padding: '8px',
         display: 'flex',
